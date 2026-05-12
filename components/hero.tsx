@@ -37,33 +37,21 @@ export function Hero() {
       <div className="relative h-full flex flex-col justify-center">
         <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20 w-full">
           <div className="max-w-4xl">
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mb-8"
-            >
-              <span className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm text-white text-xs font-semibold tracking-[0.25em] uppercase">
-                Desde 1970 en Villar del Olmo
-              </span>
-            </motion.div>
-
             {/* Title */}
             <motion.h1
               initial={{ opacity: 0, y: 40 }}
               animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-display text-white mb-8"
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="mb-8"
             >
-              <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl">
-                PASIÓN
+              <span className="block font-serif italic text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-white leading-none">
+                Pasión
               </span>
-              <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-white/40">
-                POR EL
+              <span className="block font-serif italic text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-none" style={{ color: '#F5C518' }}>
+                por el
               </span>
-              <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl">
-                FÚTBOL
+              <span className="block font-serif italic text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-white leading-none">
+                Fútbol
               </span>
             </motion.h1>
 

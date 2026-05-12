@@ -58,7 +58,7 @@ export default function HistoriaPage() {
               <div className="w-full max-w-2xl overflow-hidden mb-10 shadow-md">
                 <div className="relative aspect-[4/3] w-full">
                   <Image
-                    src="/images/historia-equipo.jpg"
+                    src="/images/historia-equipo-real.jpg"
                     alt="Historia del equipo C.D. Unión Deportiva Villar del Olmo"
                     fill
                     className="object-cover"
@@ -94,7 +94,7 @@ export default function HistoriaPage() {
               <div className="w-full max-w-2xl overflow-hidden mb-10 shadow-md">
                 <div className="relative aspect-[4/3] w-full">
                   <Image
-                    src="/images/historia-ayuntamiento.jpg"
+                    src="/images/historia-ayuntamiento-real.jpg"
                     alt="Ayuntamiento de Villar del Olmo"
                     fill
                     className="object-cover"
