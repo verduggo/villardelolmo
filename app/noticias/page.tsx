@@ -15,17 +15,16 @@ export default function NoticiasPage() {
       <Header />
       <main className="flex-1">
         {/* Hero Header */}
-        <section className="pt-32 pb-20 md:pt-40 md:pb-28 bg-primary relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <motion.div
-              animate={{ x: [0, -500] }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="whitespace-nowrap absolute bottom-0"
-            >
-              <span className="text-[20rem] font-bold text-white tracking-tighter">
-                NOTICIAS &nbsp; NOTICIAS &nbsp; NOTICIAS
-              </span>
-            </motion.div>
+        <section className="pt-32 pb-20 md:pt-40 md:pb-28 relative overflow-hidden">
+          <div className="absolute inset-0">
+            <Image
+              src="/images/hero-field.jpg"
+              alt="Campo de fútbol Villar del Olmo"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-primary/75" />
           </div>
           <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20 relative">
             <FadeIn>
