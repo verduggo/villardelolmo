@@ -51,72 +51,80 @@ export default function HistoriaPage() {
           </div>
         </section>
 
-        {/* Section 1 — Historia del Club (fondo blanco) */}
-        <section className="py-24 md:py-40 bg-white">
-          <div className="max-w-4xl mx-auto px-6 lg:px-12 xl:px-20 flex flex-col items-center text-center">
-            <FadeIn delay={0.1}>
-              <div className="w-full max-w-2xl overflow-hidden mb-10 shadow-md">
-                <div className="relative aspect-[4/3] w-full">
+        {/* Section 1 — Historia del Club: Imagen izquierda + Texto derecha */}
+        <section className="py-20 md:py-32 bg-white">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+              {/* Imagen del equipo */}
+              <FadeIn>
+                <div className="relative aspect-[4/3] w-full overflow-hidden shadow-lg">
                   <Image
                     src="/images/historia-equipo-real.jpg"
-                    alt="Historia del equipo C.D. Unión Deportiva Villar del Olmo"
+                    alt="Equipo C.D. Unión Deportiva Villar del Olmo"
                     fill
                     className="object-cover"
                   />
                 </div>
-              </div>
-            </FadeIn>
-            <FadeIn delay={0.2}>
-              <div className="max-w-2xl space-y-4 text-foreground/80 leading-relaxed text-lg">
-                <p>
-                  El C.D. Union Deportiva Villar del Olmo nacio en 1970 por iniciativa de un grupo de vecinos
-                  apasionados por el futbol que querian crear un espacio donde los jovenes del municipio pudieran
-                  practicar deporte.
-                </p>
-                <p>
-                  Desde entonces, el club ha crecido hasta convertirse en una referencia del futbol base en la zona
-                  este de Madrid. Cientos de jugadores han pasado por nuestras filas, muchos de ellos alcanzando
-                  categorias superiores del futbol espanol.
-                </p>
-                <p>
-                  Hoy, con mas de 300 jugadores distribuidos en 12 equipos federados, seguimos fieles a nuestra
-                  mision: formar futbolistas y, sobre todo, buenas personas.
-                </p>
-              </div>
-            </FadeIn>
+              </FadeIn>
+              
+              {/* Texto historia del club */}
+              <FadeIn delay={0.2}>
+                <div className="space-y-6">
+                  <span className="text-xs font-semibold text-primary uppercase tracking-[0.25em]">
+                    Historia del Club
+                  </span>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+                    Desde 1970 formando futbolistas
+                  </h2>
+                  <div className="space-y-4 text-foreground/70 leading-relaxed">
+                    <p>
+                      El C.D. Union Deportiva Villar del Olmo nacio en 1970 por iniciativa de un grupo de vecinos apasionados por el futbol que querian crear un espacio donde los jovenes del municipio pudieran practicar deporte.
+                    </p>
+                    <p>
+                      Desde entonces, el club ha crecido hasta convertirse en una referencia del futbol base en la zona este de Madrid. Cientos de jugadores han pasado por nuestras filas, muchos de ellos alcanzando categorias superiores del futbol espanol.
+                    </p>
+                    <p>
+                      Hoy, con mas de 300 jugadores distribuidos en 12 equipos federados, seguimos fieles a nuestra mision: formar futbolistas y, sobre todo, buenas personas.
+                    </p>
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
           </div>
         </section>
 
-        {/* Section 2 — Historia del Pueblo (fondo negro) */}
-        <section className="py-24 md:py-40 bg-foreground">
-          <div className="max-w-4xl mx-auto px-6 lg:px-12 xl:px-20 flex flex-col items-center text-center">
-            <FadeIn delay={0.1}>
-              <div className="w-full max-w-2xl overflow-hidden mb-10 shadow-md">
-                <div className="relative aspect-[4/3] w-full">
-                  <Image
-                    src="/images/historia-ayuntamiento-real.jpg"
-                    alt="Ayuntamiento de Villar del Olmo"
-                    fill
-                    className="object-cover"
-                  />
+        {/* Section 2 — Historia del Pueblo: Texto arriba + Imagen abajo */}
+        <section className="py-20 md:py-32 bg-foreground">
+          <div className="max-w-4xl mx-auto px-6 lg:px-12 xl:px-20">
+            {/* Texto historia del pueblo */}
+            <FadeIn>
+              <div className="text-center mb-12 md:mb-16">
+                <span className="text-xs font-semibold text-primary uppercase tracking-[0.25em] block mb-4">
+                  Historia del Pueblo
+                </span>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-8">
+                  Villar del Olmo
+                </h2>
+                <div className="space-y-4 text-white/70 leading-relaxed text-left md:text-center max-w-3xl mx-auto">
+                  <p>
+                    Villar del Olmo es un municipio situado en la comarca de Las Vegas, al este de la Comunidad de Madrid, con una rica historia que se remonta a la Edad Media. Su nombre evoca el olmo que durante siglos presidio la plaza del pueblo, simbolo de vida y reunion para sus vecinos.
+                  </p>
+                  <p>
+                    La villa ha conservado a lo largo de los siglos su identidad rural y su fuerte vinculo comunitario. El futbol llego al pueblo como una extension natural de ese espiritu de union, convirtiendose en el deporte mas querido y en un pilar fundamental de la vida social y cultural de Villar del Olmo.
+                  </p>
                 </div>
               </div>
             </FadeIn>
+            
+            {/* Imagen del ayuntamiento */}
             <FadeIn delay={0.2}>
-              <div className="max-w-2xl space-y-4 text-background/80 leading-relaxed text-lg">
-                <p>
-                  Villar del Olmo es un municipio situado en la comarca de Las Vegas, al este de la Comunidad de
-                  Madrid, con una rica historia que se remonta a la Edad Media.
-                </p>
-                <p>
-                  Su nombre evoca el olmo que durante siglos presidio la plaza del pueblo, simbolo de vida y reunion
-                  para sus vecinos. La villa ha conservado a lo largo de los siglos su identidad rural y su fuerte
-                  vinculo comunitario.
-                </p>
-                <p>
-                  El futbol llego al pueblo como una extension natural de ese espiritu de union, convirtiendose en
-                  el deporte mas querido y en un pilar fundamental de la vida social y cultural de Villar del Olmo.
-                </p>
+              <div className="relative aspect-[16/10] w-full overflow-hidden shadow-lg">
+                <Image
+                  src="/images/historia-ayuntamiento-real.jpg"
+                  alt="Ayuntamiento de Villar del Olmo"
+                  fill
+                  className="object-cover"
+                />
               </div>
             </FadeIn>
           </div>
