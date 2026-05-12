@@ -1,38 +1,18 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Play, Pause, Volume2, VolumeX, ArrowDown } from "lucide-react"
+import { ArrowDown } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 export function Hero() {
-  const [isMuted, setIsMuted] = useState(true)
-  const [isPlaying, setIsPlaying] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     setIsLoaded(true)
   }, [])
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause()
-      } else {
-        videoRef.current.play()
-      }
-      setIsPlaying(!isPlaying)
-    }
-  }
-
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted
-      setIsMuted(!isMuted)
-    }
-  }
 
   const scrollToContent = () => {
     window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
@@ -40,19 +20,15 @@ export function Hero() {
 
   return (
     <section className="relative h-screen min-h-[700px] overflow-hidden bg-primary">
-      {/* Video Background */}
+      {/* Image Background */}
       <div className="absolute inset-0">
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted={isMuted}
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover scale-105"
-          poster="/images/hero-stadium.jpg"
-        >
-          <source src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-a-soccer-field-at-sunset-48979-large.mp4" type="video/mp4" />
-        </video>
+        <Image
+          src="/images/hero-field.jpg"
+          alt="Campo de fútbol Villar del Olmo"
+          fill
+          className="object-cover scale-105"
+          priority
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/80" />
         <div className="absolute inset-0 bg-primary/20 mix-blend-multiply" />
       </div>
@@ -135,33 +111,6 @@ export function Hero() {
           </div>
         </div>
       </div>
-
-      {/* Video Controls */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={isLoaded ? { opacity: 1 } : {}}
-        transition={{ delay: 1 }}
-        className="absolute bottom-8 right-8 flex gap-2"
-      >
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={togglePlay}
-          className="p-3 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-colors"
-          aria-label={isPlaying ? "Pausar video" : "Reproducir video"}
-        >
-          {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-        </motion.button>
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={toggleMute}
-          className="p-3 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-colors"
-          aria-label={isMuted ? "Activar sonido" : "Silenciar"}
-        >
-          {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-        </motion.button>
-      </motion.div>
 
       {/* Scroll indicator */}
       <motion.button

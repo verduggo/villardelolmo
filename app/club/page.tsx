@@ -5,7 +5,7 @@ import { Footer } from "@/components/footer"
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 
@@ -219,10 +219,10 @@ export default function ClubPage() {
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="inline-block">
                   <Button
                     size="lg"
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-semibold tracking-[0.1em] px-10 py-6 h-auto group"
+                    variant="outline"
+                    className="border-2 border-foreground text-foreground hover:bg-foreground hover:text-background text-sm font-semibold tracking-[0.15em] px-12 py-6 h-auto"
                   >
                     CONTACTAR
-                    <ArrowRight className="ml-3 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </motion.div>
               </Link>

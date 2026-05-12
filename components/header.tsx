@@ -1,23 +1,31 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, ArrowRight } from "lucide-react"
+import { Menu, X, ArrowRight, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ClubLogo } from "@/components/club-logo"
 import { cn } from "@/lib/utils"
 
+const clubSubmenu = [
+  { name: "EQUIPOS", href: "/club/equipos" },
+  { name: "INSTALACIONES", href: "/club/instalaciones" },
+]
+
 const navigation = [
   { name: "INICIO", href: "/" },
+  { name: "EL CLUB", href: "/club", submenu: clubSubmenu },
+  { name: "HISTORIA", href: "/historia" },
   { name: "NOTICIAS", href: "/noticias" },
-  { name: "EL CLUB", href: "/club" },
   { name: "CONTACTO", href: "/contacto" },
 ]
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [clubDropdownOpen, setClubDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +33,16 @@ export function Header() {
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setClubDropdownOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
   return (
@@ -65,21 +83,65 @@ export function Header() {
           </Link>
 
           <div className="hidden lg:flex lg:items-center lg:gap-1">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="group relative px-5 py-2"
-              >
-                <span className={cn(
-                  "text-xs font-semibold tracking-[0.15em] transition-colors",
-                  scrolled ? "text-foreground group-hover:text-primary" : "text-white/90 group-hover:text-white"
-                )}>
-                  {item.name}
-                </span>
-                <span className="absolute bottom-0 left-5 right-5 h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-              </Link>
-            ))}
+            {navigation.map((item) =>
+              item.submenu ? (
+                <div key={item.name} className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setClubDropdownOpen(!clubDropdownOpen)}
+                    className="group relative px-5 py-2 flex items-center gap-1"
+                  >
+                    <span className={cn(
+                      "text-xs font-semibold tracking-[0.15em] transition-colors",
+                      scrolled ? "text-foreground group-hover:text-primary" : "text-white/90 group-hover:text-white"
+                    )}>
+                      {item.name}
+                    </span>
+                    <ChevronDown className={cn(
+                      "h-3 w-3 transition-all duration-200",
+                      scrolled ? "text-foreground group-hover:text-primary" : "text-white/90 group-hover:text-white",
+                      clubDropdownOpen ? "rotate-180" : ""
+                    )} />
+                    <span className="absolute bottom-0 left-5 right-5 h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                  </button>
+                  <AnimatePresence>
+                    {clubDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.18 }}
+                        className="absolute left-0 top-full mt-1 w-44 bg-background border border-border shadow-lg"
+                      >
+                        {item.submenu.map((sub) => (
+                          <Link
+                            key={sub.name}
+                            href={sub.href}
+                            className="block px-5 py-3 text-xs font-semibold tracking-[0.12em] text-foreground hover:text-primary hover:bg-secondary/50 transition-colors"
+                            onClick={() => setClubDropdownOpen(false)}
+                          >
+                            {sub.name}
+                          </Link>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="group relative px-5 py-2"
+                >
+                  <span className={cn(
+                    "text-xs font-semibold tracking-[0.15em] transition-colors",
+                    scrolled ? "text-foreground group-hover:text-primary" : "text-white/90 group-hover:text-white"
+                  )}>
+                    {item.name}
+                  </span>
+                  <span className="absolute bottom-0 left-5 right-5 h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                </Link>
+              )
+            )}
           </div>
 
           <div className="hidden lg:flex lg:items-center lg:gap-4">
@@ -168,6 +230,7 @@ export function Header() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + i * 0.05 }}
+                  className="flex flex-col items-center"
                 >
                   <Link
                     href={item.href}
@@ -176,6 +239,20 @@ export function Header() {
                   >
                     {item.name}
                   </Link>
+                  {item.submenu && (
+                    <div className="flex gap-6 mt-2">
+                      {item.submenu.map((sub) => (
+                        <Link
+                          key={sub.name}
+                          href={sub.href}
+                          className="text-sm font-semibold text-white/60 tracking-[0.15em] hover:text-white transition-colors"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {sub.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </motion.div>
               ))}
               
