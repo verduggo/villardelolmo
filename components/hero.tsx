@@ -23,7 +23,7 @@ export function Hero() {
       {/* Image Background */}
       <div className="absolute inset-0">
         <Image
-          src="/images/hero-field.jpg"
+          src="/images/noticias-bg.jpg"
           alt="Campo de fútbol Villar del Olmo"
           fill
           className="object-cover scale-105"

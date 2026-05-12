@@ -18,8 +18,8 @@ export default function NoticiasPage() {
         <section className="pt-32 pb-20 md:pt-40 md:pb-28 relative overflow-hidden">
           <div className="absolute inset-0">
             <Image
-              src="/images/noticias-bg.jpg"
-              alt="Campo de fútbol"
+              src="/images/hero-field.jpg"
+              alt="Campo de fútbol Villar del Olmo"
               fill
               className="object-cover"
               priority

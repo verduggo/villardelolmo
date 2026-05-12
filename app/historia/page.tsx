@@ -54,16 +54,11 @@ export default function HistoriaPage() {
         {/* Section 1 — Historia del Club (fondo blanco) */}
         <section className="py-24 md:py-40 bg-white">
           <div className="max-w-4xl mx-auto px-6 lg:px-12 xl:px-20 flex flex-col items-center text-center">
-            <FadeIn>
-              <span className="text-xs font-semibold text-primary uppercase tracking-[0.25em] mb-6 block">
-                Historia del Club
-              </span>
-            </FadeIn>
             <FadeIn delay={0.1}>
               <div className="w-full max-w-2xl overflow-hidden mb-10 shadow-md">
                 <div className="relative aspect-[4/3] w-full">
                   <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-9HalGUnptRouVpyZ0JMFoV1EQujJVv.png"
+                    src="/images/historia-equipo.jpg"
                     alt="Historia del equipo C.D. Unión Deportiva Villar del Olmo"
                     fill
                     className="object-cover"
@@ -95,16 +90,11 @@ export default function HistoriaPage() {
         {/* Section 2 — Historia del Pueblo (fondo negro) */}
         <section className="py-24 md:py-40 bg-foreground">
           <div className="max-w-4xl mx-auto px-6 lg:px-12 xl:px-20 flex flex-col items-center text-center">
-            <FadeIn>
-              <span className="text-xs font-semibold text-primary uppercase tracking-[0.25em] mb-6 block">
-                Historia del Pueblo
-              </span>
-            </FadeIn>
             <FadeIn delay={0.1}>
               <div className="w-full max-w-2xl overflow-hidden mb-10 shadow-md">
                 <div className="relative aspect-[4/3] w-full">
                   <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-M34yoDrxWqpYMAcBL26pRm33z1FfOh.png"
+                    src="/images/historia-ayuntamiento.jpg"
                     alt="Ayuntamiento de Villar del Olmo"
                     fill
                     className="object-cover"
