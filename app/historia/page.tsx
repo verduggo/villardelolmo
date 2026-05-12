@@ -93,40 +93,42 @@ export default function HistoriaPage() {
           </div>
         </section>
 
-        {/* Section 2 — Historia del Pueblo: Texto arriba + Imagen abajo */}
+        {/* Section 2 — Historia del Pueblo: Texto izquierda + Imagen derecha */}
         <section className="py-20 md:py-32 bg-foreground">
-          <div className="max-w-4xl mx-auto px-6 lg:px-12 xl:px-20">
-            {/* Texto historia del pueblo */}
-            <FadeIn>
-              <div className="text-center mb-12 md:mb-16">
-                <span className="text-xs font-semibold text-primary uppercase tracking-[0.25em] block mb-4">
-                  Historia del Pueblo
-                </span>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-8">
-                  Villar del Olmo
-                </h2>
-                <div className="space-y-4 text-white/70 leading-relaxed text-left md:text-center max-w-3xl mx-auto">
-                  <p>
-                    Villar del Olmo es un municipio situado en la comarca de Las Vegas, al este de la Comunidad de Madrid, con una rica historia que se remonta a la Edad Media. Su nombre evoca el olmo que durante siglos presidio la plaza del pueblo, simbolo de vida y reunion para sus vecinos.
-                  </p>
-                  <p>
-                    La villa ha conservado a lo largo de los siglos su identidad rural y su fuerte vinculo comunitario. El futbol llego al pueblo como una extension natural de ese espiritu de union, convirtiendose en el deporte mas querido y en un pilar fundamental de la vida social y cultural de Villar del Olmo.
-                  </p>
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+              {/* Texto historia del pueblo */}
+              <FadeIn>
+                <div className="space-y-6">
+                  <span className="text-xs font-semibold text-primary uppercase tracking-[0.25em]">
+                    Historia del Pueblo
+                  </span>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
+                    Villar del Olmo
+                  </h2>
+                  <div className="space-y-4 text-white/70 leading-relaxed">
+                    <p>
+                      Villar del Olmo es un municipio situado en la comarca de Las Vegas, al este de la Comunidad de Madrid, con una rica historia que se remonta a la Edad Media. Su nombre evoca el olmo que durante siglos presidio la plaza del pueblo, simbolo de vida y reunion para sus vecinos.
+                    </p>
+                    <p>
+                      La villa ha conservado a lo largo de los siglos su identidad rural y su fuerte vinculo comunitario. El futbol llego al pueblo como una extension natural de ese espiritu de union, convirtiendose en el deporte mas querido y en un pilar fundamental de la vida social y cultural de Villar del Olmo.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </FadeIn>
-            
-            {/* Imagen del ayuntamiento */}
-            <FadeIn delay={0.2}>
-              <div className="relative aspect-[16/10] w-full overflow-hidden shadow-lg">
-                <Image
-                  src="/images/historia-ayuntamiento-real.jpg"
-                  alt="Ayuntamiento de Villar del Olmo"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </FadeIn>
+              </FadeIn>
+              
+              {/* Imagen del ayuntamiento */}
+              <FadeIn delay={0.2}>
+                <div className="relative aspect-[4/3] w-full overflow-hidden shadow-lg">
+                  <Image
+                    src="/images/historia-ayuntamiento-real.jpg"
+                    alt="Ayuntamiento de Villar del Olmo"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </FadeIn>
+            </div>
           </div>
         </section>
       </main>
