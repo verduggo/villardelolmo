@@ -1,15 +1,90 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { allNews } from "@/components/news-section"
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, ArrowUpRight } from "lucide-react"
+import { ArrowLeft, ArrowUpRight, Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
+import { createClient } from "@/lib/supabase/client"
+import type { Database } from "@/lib/database.types"
+
+type Noticia = Database["public"]["Tables"]["noticias"]["Row"]
+
+const fallbackNews = [
+  {
+    id: "1",
+    titulo: "Victoria contundente en el derbi comarcal",
+    extracto: "El equipo se impuso por 3-0 en un partido que dominó de principio a fin ante la afición local.",
+    slug: "victoria-derbi-comarcal",
+    imagen_principal: "/images/hero-stadium.jpg",
+    fecha_publicacion: "2026-04-28",
+  },
+  {
+    id: "2",
+    titulo: "El Alevín A, campeón de su grupo",
+    extracto: "Los más pequeños del club consiguen el título con una temporada impecable.",
+    slug: "alevin-campeon-grupo",
+    imagen_principal: "/images/hero-stadium.jpg",
+    fecha_publicacion: "2026-04-25",
+  },
+  {
+    id: "3",
+    titulo: "Jornada de puertas abiertas",
+    extracto: "Este sábado abrimos nuestras puertas a todas las familias que quieran conocer el proyecto.",
+    slug: "jornada-puertas-abiertas",
+    imagen_principal: "/images/hero-stadium.jpg",
+    fecha_publicacion: "2026-04-20",
+  },
+  {
+    id: "4",
+    titulo: "Nuevas equipaciones para la temporada",
+    extracto: "Diseño que mantiene la esencia verdiblanca con toques modernos para la próxima temporada.",
+    slug: "nuevas-equipaciones-temporada",
+    imagen_principal: "/images/hero-stadium.jpg",
+    fecha_publicacion: "2026-04-18",
+  },
+]
 
 export default function NoticiasPage() {
+  const [noticias, setNoticias] = useState<Partial<Noticia>[]>(fallbackNews)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchNoticias() {
+      try {
+        const supabase = createClient()
+        const { data, error } = await supabase
+          .from("noticias")
+          .select("*")
+          .eq("estado", "publicada")
+          .order("fecha_publicacion", { ascending: false })
+
+        if (error) throw error
+        if (data && data.length > 0) {
+          setNoticias(data)
+        }
+      } catch (error) {
+        console.log("[v0] Using fallback news data")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchNoticias()
+  }, [])
+
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return ""
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    })
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
@@ -53,56 +128,62 @@ export default function NoticiasPage() {
         {/* News list */}
         <section className="py-20 md:py-32">
           <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20">
-            <StaggerContainer className="space-y-1" staggerDelay={0.1}>
-              {allNews.map((item, index) => (
-                <StaggerItem key={item.id}>
-                  <article className="group">
-                    <Link 
-                      href={`/noticias/${item.slug}`} 
-                      className="grid md:grid-cols-12 gap-6 md:gap-8 py-10 border-b border-border items-center"
-                    >
-                      <div className="md:col-span-4 lg:col-span-3">
-                        <div className="aspect-[4/3] bg-muted overflow-hidden relative">
-                          <Image
-                            src={item.image}
-                            alt={item.title}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
-                          />
-                          <motion.div 
-                            className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors flex items-center justify-center"
-                          >
+            {loading ? (
+              <div className="flex items-center justify-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : (
+              <StaggerContainer className="space-y-1" staggerDelay={0.1}>
+                {noticias.map((item) => (
+                  <StaggerItem key={item.id}>
+                    <article className="group">
+                      <Link 
+                        href={`/noticias/${item.slug}`} 
+                        className="grid md:grid-cols-12 gap-6 md:gap-8 py-10 border-b border-border items-center"
+                      >
+                        <div className="md:col-span-4 lg:col-span-3">
+                          <div className="aspect-[4/3] bg-muted overflow-hidden relative">
+                            <Image
+                              src={item.imagen_principal || "/images/hero-stadium.jpg"}
+                              alt={item.titulo || ""}
+                              fill
+                              className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
                             <motion.div 
-                              className="w-12 h-12 bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"
-                              whileHover={{ scale: 1.1 }}
+                              className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors flex items-center justify-center"
                             >
-                              <ArrowUpRight className="h-5 w-5 text-primary" />
+                              <motion.div 
+                                className="w-12 h-12 bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"
+                                whileHover={{ scale: 1.1 }}
+                              >
+                                <ArrowUpRight className="h-5 w-5 text-primary" />
+                              </motion.div>
                             </motion.div>
-                          </motion.div>
+                          </div>
                         </div>
-                      </div>
-                      <div className="md:col-span-8 lg:col-span-9">
-                        <div className="flex flex-wrap items-center gap-4 mb-4">
-                          <span className="text-xs font-semibold text-primary uppercase tracking-[0.15em]">
-                            {item.category}
-                          </span>
-                          <span className="w-1 h-1 bg-muted-foreground rounded-full" />
-                          <span className="text-xs text-muted-foreground tracking-wide">
-                            {item.date}
-                          </span>
+                        <div className="md:col-span-8 lg:col-span-9">
+                          <div className="flex flex-wrap items-center gap-4 mb-4">
+                            <span className="text-xs font-semibold text-primary uppercase tracking-[0.15em]">
+                              Noticia
+                            </span>
+                            <span className="w-1 h-1 bg-muted-foreground rounded-full" />
+                            <span className="text-xs text-muted-foreground tracking-wide">
+                              {formatDate(item.fecha_publicacion)}
+                            </span>
+                          </div>
+                          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground group-hover:text-primary transition-colors mb-4 tracking-tight">
+                            {item.titulo}
+                          </h2>
+                          <p className="text-muted-foreground leading-relaxed max-w-2xl">
+                            {item.extracto}
+                          </p>
                         </div>
-                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground group-hover:text-primary transition-colors mb-4 tracking-tight">
-                          {item.title}
-                        </h2>
-                        <p className="text-muted-foreground leading-relaxed max-w-2xl">
-                          {item.excerpt}
-                        </p>
-                      </div>
-                    </Link>
-                  </article>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
+                      </Link>
+                    </article>
+                  </StaggerItem>
+                ))}
+              </StaggerContainer>
+            )}
           </div>
         </section>
       </main>
