@@ -8,10 +8,10 @@ import { useRef, useEffect, useState } from "react"
 import { FadeIn } from "@/components/motion"
 
 const stats = [
-  { value: 1970, label: "AÑO DE FUNDACIÓN", suffix: "" },
-  { value: 5, label: "EQUIPOS ACTIVOS", suffix: "" },
-  { value: 50, label: "AÑOS DE HISTORIA", suffix: "" },
-  { value: 1, label: "MISMA PASIÓN", suffix: "" },
+  { value: 1970, label: "Año de fundación", suffix: "" },
+  { value: 5, label: "Equipos activos", suffix: "" },
+  { value: 50, label: "Años de historia", suffix: "+" },
+  { value: 1, label: "Misma pasión", suffix: "" },
 ]
 
 function AnimatedNumber({ value, suffix }: { value: number; suffix: string }) {
@@ -99,7 +99,7 @@ export function AboutSection() {
                   <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary group-hover:text-white transition-colors mb-3 tracking-tight">
                     <AnimatedNumber value={stat.value} suffix={stat.suffix} />
                   </div>
-                  <div className="text-[10px] md:text-xs text-muted-foreground group-hover:text-white/70 transition-colors tracking-[0.15em]">
+                  <div className="text-xs md:text-sm text-muted-foreground group-hover:text-white/70 transition-colors tracking-wide font-medium">
                     {stat.label}
                   </div>
                 </motion.div>
