@@ -17,6 +17,7 @@ const navigation = [
   { name: "INICIO", href: "/" },
   { name: "EL CLUB", href: "/club", submenu: clubSubmenu },
   { name: "HISTORIA", href: "/historia" },
+  { name: "GALERÍA", href: "/galeria" },
   { name: "NOTICIAS", href: "/noticias" },
   { name: "CONTACTO", href: "/contacto" },
 ]

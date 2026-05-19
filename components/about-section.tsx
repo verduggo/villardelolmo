@@ -110,20 +110,7 @@ export function AboutSection() {
           </FadeIn>
         </div>
 
-        {/* Large Typography */}
-        <FadeIn delay={0.4} className="mt-32">
-          <div className="overflow-hidden">
-            <motion.div
-              animate={{ x: [0, -1000] }}
-              transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-              className="whitespace-nowrap"
-            >
-              <span className="text-8xl md:text-[12rem] font-bold text-primary/5 tracking-tighter inline-block">
-                VILLAR DEL OLMO &nbsp;&nbsp;&nbsp; VILLAR DEL OLMO &nbsp;&nbsp;&nbsp; VILLAR DEL OLMO &nbsp;&nbsp;&nbsp;
-              </span>
-            </motion.div>
-          </div>
-        </FadeIn>
+
       </div>
     </section>
   )

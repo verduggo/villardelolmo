@@ -6,7 +6,6 @@ import { FadeIn } from "@/components/motion"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft } from "lucide-react"
-import { motion } from "framer-motion"
 
 export default function HistoriaPage() {
   return (
@@ -15,17 +14,6 @@ export default function HistoriaPage() {
       <main className="flex-1">
         {/* Page Header */}
         <section className="pt-32 pb-16 md:pt-40 md:pb-20 bg-primary relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <motion.div
-              animate={{ x: [0, -500] }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="whitespace-nowrap absolute bottom-0"
-            >
-              <span className="text-[20rem] font-bold text-white tracking-tighter">
-                HISTORIA &nbsp; HISTORIA &nbsp; HISTORIA
-              </span>
-            </motion.div>
-          </div>
           <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20 relative">
             <FadeIn>
               <Link
