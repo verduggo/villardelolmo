@@ -9,9 +9,9 @@ import { FadeIn } from "@/components/motion"
 
 const stats = [
   { value: 1970, label: "AÑO DE FUNDACIÓN", suffix: "" },
-  { value: 500, label: "JUGADORES FORMADOS", suffix: "+" },
-  { value: 12, label: "EQUIPOS ACTIVOS", suffix: "" },
-  { value: 50, label: "AÑOS DE HISTORIA", suffix: "+" },
+  { value: 5, label: "EQUIPOS ACTIVOS", suffix: "" },
+  { value: 50, label: "AÑOS DE HISTORIA", suffix: "" },
+  { value: 1, label: "MISMA PASIÓN", suffix: "" },
 ]
 
 function AnimatedNumber({ value, suffix }: { value: number; suffix: string }) {
