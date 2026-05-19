@@ -9,8 +9,8 @@ import { FadeIn } from "@/components/motion"
 
 const stats = [
   { value: 1970, label: "AÑO DE FUNDACIÓN", suffix: "" },
-  { value: 300, label: "JUGADORES FORMADOS", suffix: "+" },
-  { value: 12, label: "EQUIPOS FEDERADOS", suffix: "" },
+  { value: 500, label: "JUGADORES FORMADOS", suffix: "+" },
+  { value: 12, label: "EQUIPOS ACTIVOS", suffix: "" },
   { value: 50, label: "AÑOS DE HISTORIA", suffix: "+" },
 ]
 
@@ -59,19 +59,17 @@ export function AboutSection() {
                 Sobre nosotros
               </span>
               <h2 className="text-headline text-4xl md:text-5xl lg:text-6xl text-foreground mb-8">
-                MÁS QUE UN CLUB,
-                <br />
-                <span className="text-primary">UNA FAMILIA</span>
+                Pasión por el Fútbol
               </h2>
               <div className="space-y-6 text-muted-foreground leading-relaxed text-lg">
                 <p>
-                  El C.D. Unión Deportiva Villar del Olmo nació en 1970 con un objetivo claro: 
-                  fomentar el deporte y los valores entre los jóvenes de nuestro municipio.
+                  Un club de pueblo, una cantera con valores y una forma de entender el fútbol desde el compromiso, el esfuerzo y el sentimiento de equipo.
                 </p>
                 <p>
-                  Más de cinco décadas después, seguimos fieles a ese compromiso. 
-                  Nuestra cantera es el corazón del club, donde formamos futbolistas 
-                  pero, sobre todo, personas.
+                  El C.D. Unión Deportiva Villar del Olmo forma parte de la vida deportiva del municipio desde hace décadas. Un club cercano, construido alrededor del fútbol base, el esfuerzo diario y el compromiso de familias, jugadores y entrenadores.
+                </p>
+                <p>
+                  Más que competir, el objetivo siempre ha sido formar. Formar futbolistas, pero sobre todo personas que entiendan el valor del compañerismo, el respeto y la pertenencia a un equipo.
                 </p>
               </div>
               <Link 
