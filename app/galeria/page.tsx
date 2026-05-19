@@ -10,63 +10,53 @@ import { ArrowLeft } from "lucide-react"
 const photos = [
   {
     src: "/images/galeria-1.jpg",
-    alt: "Celebración del equipo",
-    caption: "Celebración tras victoria",
+    alt: "Equipo celebrando",
+    caption: "Equipo celebrando",
   },
   {
     src: "/images/galeria-2.jpg",
     alt: "Partido en el campo",
-    caption: "Partido en casa",
+    caption: "Acción en el partido",
   },
   {
     src: "/images/galeria-3.jpg",
-    alt: "Entrega de trofeos",
-    caption: "Ceremonia de trofeos",
+    alt: "Celebración de victoria",
+    caption: "Entrenamiento intenso",
   },
   {
     src: "/images/galeria-4.jpg",
-    alt: "Vista del estadio",
-    caption: "Nuestro campo",
+    alt: "Cantera en entrenamiento",
+    caption: "Formando futbolistas",
   },
   {
     src: "/images/galeria-5.jpg",
-    alt: "Entrenamiento de cantera",
-    caption: "Entrenamiento cantera",
+    alt: "Estadio con público",
+    caption: "En casa",
   },
   {
     src: "/images/galeria-6.jpg",
-    alt: "Foto oficial del equipo",
-    caption: "Foto oficial del equipo",
+    alt: "Equipo en el campo",
+    caption: "En tierra",
   },
   {
-    src: "/images/equipo-senior.jpg",
+    src: "/images/galeria-7.jpg",
+    alt: "Gesto del club",
+    caption: "Orgullo de vestir verde",
+  },
+  {
+    src: "/images/galeria-8.jpg",
     alt: "Equipo sénior",
     caption: "Equipo sénior",
   },
   {
-    src: "/images/equipo-juvenil.jpg",
-    alt: "Equipo juvenil",
-    caption: "Equipo juvenil",
-  },
-  {
-    src: "/images/equipo-cadete.jpg",
-    alt: "Equipo cadete",
-    caption: "Equipo cadete",
-  },
-  {
-    src: "/images/equipo-infantil.jpg",
-    alt: "Equipo infantil",
-    caption: "Equipo infantil",
-  },
-  {
-    src: "/images/equipo-femenino.jpg",
+    src: "/images/galeria-9.jpg",
     alt: "Equipo femenino",
     caption: "Equipo femenino",
   },
   {
-    src: "/images/instalacion-campo.jpg",
+    src: "/images/galeria-10.jpg",
     alt: "Instalaciones del club",
-    caption: "Instalaciones",
+    caption: "Nuestro campo",
   },
 ]
 
