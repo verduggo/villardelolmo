@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X, ArrowRight, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -27,6 +28,15 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [clubDropdownOpen, setClubDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
+
+  // Prefetch all routes on mount for instant navigation
+  useEffect(() => {
+    const routes = ["/", "/club", "/club/equipos", "/club/instalaciones", "/historia", "/galeria", "/noticias", "/contacto", "/socios", "/socios/login"]
+    routes.forEach(route => {
+      router.prefetch(route)
+    })
+  }, [router])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,9 +61,9 @@ export function Header() {
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
+        transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
         className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-all duration-500",
+          "fixed inset-x-0 top-0 z-50 transition-all duration-200",
           scrolled 
             ? "bg-background/98 backdrop-blur-xl shadow-sm" 
             : "bg-transparent"
@@ -107,10 +117,10 @@ export function Header() {
                   <AnimatePresence>
                     {clubDropdownOpen && (
                       <motion.div
-                        initial={{ opacity: 0, y: -8 }}
+                        initial={{ opacity: 0, y: -4 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.18 }}
+                        exit={{ opacity: 0, y: -4 }}
+                        transition={{ duration: 0.12 }}
                         className="absolute left-0 top-full mt-1 w-44 bg-background border border-border shadow-lg"
                       >
                         {item.submenu.map((sub) => (
@@ -189,7 +199,7 @@ export function Header() {
                   initial={{ rotate: -90, opacity: 0 }}
                   animate={{ rotate: 0, opacity: 1 }}
                   exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.15 }}
                 >
                   <X className="h-6 w-6" />
                 </motion.div>
@@ -199,7 +209,7 @@ export function Header() {
                   initial={{ rotate: 90, opacity: 0 }}
                   animate={{ rotate: 0, opacity: 1 }}
                   exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.15 }}
                 >
                   <Menu className="h-6 w-6" />
                 </motion.div>
@@ -216,21 +226,21 @@ export function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.2 }}
             className="fixed inset-0 z-40 bg-primary lg:hidden"
           >
             <motion.nav 
               className="flex flex-col justify-center items-center h-full gap-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.1 }}
+              transition={{ delay: 0.05 }}
             >
               {navigation.map((item, i) => (
                 <motion.div
                   key={item.name}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + i * 0.05 }}
+                  transition={{ delay: 0.05 + i * 0.03 }}
                   className="flex flex-col items-center"
                 >
                   <Link
@@ -260,7 +270,7 @@ export function Header() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.25 }}
                 className="flex flex-col gap-4 mt-8"
               >
                 <Link href="/socios/login" onClick={() => setMobileMenuOpen(false)}>

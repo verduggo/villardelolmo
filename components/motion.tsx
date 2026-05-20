@@ -15,20 +15,20 @@ interface FadeInProps {
 export function FadeIn({ 
   children, 
   delay = 0, 
-  duration = 0.6,
+  duration = 0.3,
   direction = "up",
   className = "",
   once = true
 }: FadeInProps) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once, margin: "-50px" })
+  const isInView = useInView(ref, { once, margin: "-30px" })
   const controls = useAnimation()
 
   const directions = {
-    up: { y: 40, x: 0 },
-    down: { y: -40, x: 0 },
-    left: { x: 40, y: 0 },
-    right: { x: -40, y: 0 },
+    up: { y: 20, x: 0 },
+    down: { y: -20, x: 0 },
+    left: { x: 20, y: 0 },
+    right: { x: -20, y: 0 },
     none: { x: 0, y: 0 }
   }
 
@@ -55,7 +55,7 @@ export function FadeIn({
           transition: {
             duration,
             delay,
-            ease: [0.25, 0.4, 0.25, 1]
+            ease: [0.25, 0.1, 0.25, 1]
           }
         }
       }}
@@ -75,10 +75,10 @@ interface StaggerContainerProps {
 export function StaggerContainer({ 
   children, 
   className = "",
-  staggerDelay = 0.1
+  staggerDelay = 0.05
 }: StaggerContainerProps) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-50px" })
+  const isInView = useInView(ref, { once: true, margin: "-30px" })
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -86,7 +86,7 @@ export function StaggerContainer({
       opacity: 1,
       transition: {
         staggerChildren: staggerDelay,
-        delayChildren: 0.1
+        delayChildren: 0.05
       }
     }
   }
@@ -112,13 +112,13 @@ export function StaggerItem({
   className?: string 
 }) {
   const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 15 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5,
-        ease: [0.25, 0.4, 0.25, 1]
+        duration: 0.25,
+        ease: [0.25, 0.1, 0.25, 1]
       }
     }
   }
@@ -141,20 +141,20 @@ export function ScaleIn({
   children, 
   className = "",
   delay = 0,
-  duration = 0.5
+  duration = 0.25
 }: ScaleInProps) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-50px" })
+  const isInView = useInView(ref, { once: true, margin: "-30px" })
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, scale: 0.9 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={isInView ? { opacity: 1, scale: 1 } : {}}
       transition={{ 
         duration, 
         delay,
-        ease: [0.25, 0.4, 0.25, 1]
+        ease: [0.25, 0.1, 0.25, 1]
       }}
       className={className}
     >
@@ -178,7 +178,7 @@ export function ScaleOnHover({
     <motion.div
       whileHover={{ scale }}
       whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.15 }}
       className={className}
     >
       {children}
@@ -220,12 +220,12 @@ export function TextReveal({
       {words.map((word, i) => (
         <motion.span
           key={i}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
-            duration: 0.4,
-            delay: delay + i * 0.05,
-            ease: [0.25, 0.4, 0.25, 1]
+            duration: 0.2,
+            delay: delay + i * 0.03,
+            ease: [0.25, 0.1, 0.25, 1]
           }}
           className="inline-block mr-[0.25em]"
         >

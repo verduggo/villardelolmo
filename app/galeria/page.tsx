@@ -58,6 +58,11 @@ const photos = [
     alt: "Instalaciones del club",
     caption: "Nuestro campo",
   },
+  {
+    src: "/images/galeria-11.jpg",
+    alt: "Entrenamiento en el campo",
+    caption: "Entrenamiento",
+  },
 ]
 
 export default function GaleriaPage() {
@@ -97,16 +102,18 @@ export default function GaleriaPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {photos.map((photo, index) => (
-                <FadeIn key={index} delay={index * 0.05}>
+                <FadeIn key={index} delay={index * 0.03}>
                   <div className="group relative overflow-hidden bg-muted aspect-[4/3]">
                     <Image
                       src={photo.src}
                       alt={photo.alt}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      loading={index < 6 ? "eager" : "lazy"}
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300" />
-                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-200" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-200">
                       <span className="text-white text-sm font-semibold tracking-wide">
                         {photo.caption}
                       </span>

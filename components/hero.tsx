@@ -26,8 +26,10 @@ export function Hero() {
           src="/images/noticias-bg.jpg"
           alt="Campo de fútbol Villar del Olmo"
           fill
+          sizes="100vw"
           className="object-cover scale-105"
           priority
+          quality={85}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/80" />
         <div className="absolute inset-0 bg-primary/20 mix-blend-multiply" />
@@ -39,9 +41,9 @@ export function Hero() {
           <div className="max-w-4xl">
             {/* Title */}
             <motion.h1
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
               className="mb-8"
             >
               <span className="block font-serif italic text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-white leading-none">
@@ -57,9 +59,9 @@ export function Hero() {
 
             {/* Description */}
             <motion.p
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              transition={{ duration: 0.3, delay: 0.25 }}
               className="text-white/70 text-lg md:text-xl max-w-xl mb-12 leading-relaxed font-light"
             >
               Más de 50 años formando futbolistas y personas. 
@@ -68,9 +70,9 @@ export function Hero() {
 
             {/* CTAs */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.7 }}
+              transition={{ duration: 0.3, delay: 0.35 }}
               className="flex flex-wrap gap-4"
             >
               <Link href="/club">
@@ -102,9 +104,9 @@ export function Hero() {
 
       {/* Scroll indicator */}
       <motion.button
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -10 }}
         animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 1.2 }}
+        transition={{ delay: 0.6 }}
         onClick={scrollToContent}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-3 text-white/50 hover:text-white transition-colors cursor-pointer group"
       >
@@ -119,9 +121,9 @@ export function Hero() {
 
       {/* Stats Bar */}
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, delay: 0.9 }}
+        transition={{ duration: 0.3, delay: 0.45 }}
         className="absolute bottom-0 left-0 right-0 bg-white/5 backdrop-blur-xl border-t border-white/10"
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20">
