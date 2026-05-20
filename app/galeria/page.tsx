@@ -63,6 +63,11 @@ const photos = [
     alt: "Entrenamiento en el campo",
     caption: "Entrenamiento",
   },
+  {
+    src: "/images/galeria-12.jpg",
+    alt: "Trofeos del club sobre el césped",
+    caption: "Trofeos ganados",
+  },
 ]
 
 export default function GaleriaPage() {
