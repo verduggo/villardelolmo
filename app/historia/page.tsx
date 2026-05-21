@@ -6,7 +6,6 @@ import { FadeIn } from "@/components/motion"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft } from "lucide-react"
-import { motion } from "framer-motion"
 
 export default function HistoriaPage() {
   return (
@@ -15,17 +14,6 @@ export default function HistoriaPage() {
       <main className="flex-1">
         {/* Page Header */}
         <section className="pt-32 pb-16 md:pt-40 md:pb-20 bg-primary relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <motion.div
-              animate={{ x: [0, -500] }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="whitespace-nowrap absolute bottom-0"
-            >
-              <span className="text-[20rem] font-bold text-white tracking-tighter">
-                HISTORIA &nbsp; HISTORIA &nbsp; HISTORIA
-              </span>
-            </motion.div>
-          </div>
           <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20 relative">
             <FadeIn>
               <Link
@@ -74,17 +62,17 @@ export default function HistoriaPage() {
                     Historia del Club
                   </span>
                   <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-                    Desde 1970 formando futbolistas
+                    Décadas formando futbolistas
                   </h2>
                   <div className="space-y-4 text-foreground/70 leading-relaxed">
                     <p>
-                      El C.D. Union Deportiva Villar del Olmo nacio en 1970 por iniciativa de un grupo de vecinos apasionados por el futbol que querian crear un espacio donde los jovenes del municipio pudieran practicar deporte.
+                      El C.D. Unión Deportiva Villar del Olmo nació con la idea de acercar el fútbol a los jóvenes del municipio y crear un espacio donde competir, aprender y crecer dentro de un ambiente de equipo.
                     </p>
                     <p>
-                      Desde entonces, el club ha crecido hasta convertirse en una referencia del futbol base en la zona este de Madrid. Cientos de jugadores han pasado por nuestras filas, muchos de ellos alcanzando categorias superiores del futbol espanol.
+                      Con el paso de los años, el club se ha convertido en un punto de encuentro para muchas familias de Villar del Olmo y alrededores. Por sus equipos han pasado generaciones de jugadores que han defendido sus colores con ilusión, esfuerzo y respeto por este deporte.
                     </p>
                     <p>
-                      Hoy, con mas de 300 jugadores distribuidos en 12 equipos federados, seguimos fieles a nuestra mision: formar futbolistas y, sobre todo, buenas personas.
+                      Hoy, el club mantiene esa misma esencia: seguir impulsando el fútbol base, cuidar la cantera y representar al pueblo dentro y fuera del campo.
                     </p>
                   </div>
                 </div>
@@ -108,10 +96,13 @@ export default function HistoriaPage() {
                   </h2>
                   <div className="space-y-4 text-white/70 leading-relaxed">
                     <p>
-                      Villar del Olmo es un municipio situado en la comarca de Las Vegas, al este de la Comunidad de Madrid, con una rica historia que se remonta a la Edad Media. Su nombre evoca el olmo que durante siglos presidio la plaza del pueblo, simbolo de vida y reunion para sus vecinos.
+                      Villar del Olmo es un municipio del este de la Comunidad de Madrid, situado en un entorno natural que conserva el carácter tranquilo y cercano de los pueblos de la comarca. Su historia está ligada a la repoblación medieval y al desarrollo de pequeñas comunidades rurales que fueron dando forma a la identidad del municipio.
                     </p>
                     <p>
-                      La villa ha conservado a lo largo de los siglos su identidad rural y su fuerte vinculo comunitario. El futbol llego al pueblo como una extension natural de ese espiritu de union, convirtiendose en el deporte mas querido y en un pilar fundamental de la vida social y cultural de Villar del Olmo.
+                      Esa identidad sigue muy presente hoy: un pueblo donde la vida social, las familias y las actividades deportivas tienen un papel importante. En ese contexto, el fútbol se ha convertido en una forma de unión entre generaciones, vecinos y jugadores que comparten algo más que un escudo.
+                    </p>
+                    <p>
+                      El C.D. Unión Deportiva Villar del Olmo representa esa conexión entre pueblo y deporte: competir con orgullo, formar desde la base y mantener vivo el sentimiento de pertenencia.
                     </p>
                   </div>
                 </div>
