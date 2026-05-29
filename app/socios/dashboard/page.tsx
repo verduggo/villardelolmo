@@ -6,7 +6,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { 
   CreditCard, 
-  Gift, 
   Calendar, 
   TrendingUp,
   ArrowRight,
@@ -27,12 +26,6 @@ const stats = [
     value: "6", 
     icon: TrendingUp, 
     color: "bg-primary" 
-  },
-  { 
-    label: "Beneficios activos", 
-    value: "12", 
-    icon: Gift, 
-    color: "bg-amber-500" 
   },
   { 
     label: "Estado", 
@@ -72,12 +65,6 @@ const quickActions = [
     description: "Accede a tu carnet digital",
     href: "/socios/dashboard/carnet",
     icon: CreditCard
-  },
-  { 
-    title: "Beneficios", 
-    description: "Descubre tus ventajas",
-    href: "/socios/dashboard/beneficios",
-    icon: Gift
   }
 ]
 
