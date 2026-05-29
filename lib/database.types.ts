@@ -340,6 +340,53 @@ export type Database = {
           updated_at?: string
         }
       }
+      galeria: {
+        Row: {
+          id: string
+          titulo: string
+          descripcion: string | null
+          imagen_url: string
+          miniatura_url: string | null
+          tipo: 'imagen' | 'video'
+          album: string | null
+          fecha: string | null
+          destacada: boolean
+          publicada: boolean
+          orden: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          titulo: string
+          descripcion?: string | null
+          imagen_url: string
+          miniatura_url?: string | null
+          tipo?: 'imagen' | 'video'
+          album?: string | null
+          fecha?: string | null
+          destacada?: boolean
+          publicada?: boolean
+          orden?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          titulo?: string
+          descripcion?: string | null
+          imagen_url?: string
+          miniatura_url?: string | null
+          tipo?: 'imagen' | 'video'
+          album?: string | null
+          fecha?: string | null
+          destacada?: boolean
+          publicada?: boolean
+          orden?: number
+          created_at?: string
+          updated_at?: string
+        }
+      }
       contacto_mensajes: {
         Row: {
           id: string

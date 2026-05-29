@@ -28,3 +28,6 @@ export * from './eventos'
 
 // Inscripciones
 export * from './inscripciones'
+
+// Galería
+export * from './galeria'

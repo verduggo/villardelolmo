@@ -291,6 +291,31 @@ CREATE TABLE public.documentos (
 );
 
 -- ============================================
+-- TABLA: galeria (fotos y videos del club)
+-- ============================================
+CREATE TABLE public.galeria (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  titulo VARCHAR(255) NOT NULL,
+  descripcion TEXT,
+  imagen_url TEXT NOT NULL,
+  miniatura_url TEXT,
+  tipo VARCHAR(50) DEFAULT 'imagen' CHECK (tipo IN ('imagen', 'video')),
+  album VARCHAR(100),
+  fecha DATE,
+  destacada BOOLEAN DEFAULT false,
+  publicada BOOLEAN DEFAULT true,
+  orden INT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Insertar álbumes por defecto
+INSERT INTO public.galeria (titulo, descripcion, imagen_url, album, publicada, orden) VALUES 
+  ('Plantilla 2025-26', 'Foto oficial del primer equipo temporada 2025-26', '/images/historia-equipo-real.jpg', 'Temporada 2025-26', true, 1),
+  ('Campo Municipal', 'Vistas del campo de fútbol', '/images/instalacion-campo.jpg', 'Instalaciones', true, 2),
+  ('Vestuarios', 'Instalaciones renovadas', '/images/instalacion-vestuarios.jpg', 'Instalaciones', true, 3);
+
+-- ============================================
 -- TABLA: configuracion_web
 -- ============================================
 CREATE TABLE public.configuracion_web (
@@ -385,6 +410,7 @@ ALTER TABLE public.eventos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.patrocinadores ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.documentos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.configuracion_web ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.galeria ENABLE ROW LEVEL SECURITY;
 
 -- Políticas públicas de lectura (contenido visible para todos)
 CREATE POLICY "Noticias publicadas son públicas" ON public.noticias FOR SELECT USING (publicada = true);
@@ -398,6 +424,7 @@ CREATE POLICY "Eventos publicados son públicos" ON public.eventos FOR SELECT US
 CREATE POLICY "Patrocinadores activos son públicos" ON public.patrocinadores FOR SELECT USING (activo = true);
 CREATE POLICY "Documentos públicos son accesibles" ON public.documentos FOR SELECT USING (publico = true);
 CREATE POLICY "Configuración web es pública" ON public.configuracion_web FOR SELECT USING (true);
+CREATE POLICY "Galería publicada es pública" ON public.galeria FOR SELECT USING (publicada = true);
 
 -- Políticas de inserción pública (formularios)
 CREATE POLICY "Cualquiera puede enviar mensaje de contacto" ON public.contacto_mensajes FOR INSERT WITH CHECK (true);
@@ -461,6 +488,10 @@ CREATE POLICY "Admins pueden gestionar categorías noticia" ON public.categorias
 );
 
 CREATE POLICY "Admins pueden gestionar configuración" ON public.configuracion_web FOR ALL USING (
+  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
+);
+
+CREATE POLICY "Admins pueden gestionar galería" ON public.galeria FOR ALL USING (
   auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
 );
 

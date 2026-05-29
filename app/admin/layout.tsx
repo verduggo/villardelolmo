@@ -18,13 +18,15 @@ import {
   LogOut,
   Bell,
   ChevronDown,
-  User
+  User,
+  Image as ImageIcon
 } from "lucide-react"
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Socios", href: "/admin/socios", icon: Users },
   { name: "Noticias", href: "/admin/noticias", icon: Newspaper },
+  { name: "Galería", href: "/admin/galeria", icon: ImageIcon },
   { name: "Equipos", href: "/admin/equipos", icon: Shield },
   { name: "Estadísticas", href: "/admin/estadisticas", icon: BarChart3 },
   { name: "Configuración", href: "/admin/configuracion", icon: Settings },
