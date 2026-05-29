@@ -3,7 +3,7 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
-import { Check, ArrowRight, Star, Users, Trophy, Heart } from "lucide-react"
+import { Check, ArrowRight, Star, Trophy, Heart } from "lucide-react"
 import Link from "next/link"
 import { FadeIn, StaggerContainer, ScaleIn } from "@/components/motion"
 import { cn } from "@/lib/utils"
@@ -51,24 +51,6 @@ const plans = [
   },
 ]
 
-const benefits = [
-  {
-    icon: Users,
-    title: "Comunidad",
-    description: "Forma parte de una familia con más de 50 años de historia"
-  },
-  {
-    icon: Trophy,
-    title: "Experiencias",
-    description: "Vive el fútbol desde dentro con acceso exclusivo"
-  },
-  {
-    icon: Heart,
-    title: "Apoyo",
-    description: "Tu aportación hace posible el deporte en nuestro pueblo"
-  },
-]
-
 export default function SociosPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -98,27 +80,6 @@ export default function SociosPage() {
                 </p>
               </FadeIn>
             </StaggerContainer>
-          </div>
-        </section>
-
-        {/* Benefits */}
-        <section className="py-16 border-y border-border bg-muted/30">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="grid md:grid-cols-3 gap-8">
-              {benefits.map((benefit, index) => (
-                <FadeIn key={index} delay={index * 0.1}>
-                  <div className="flex items-start gap-4 p-6">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                      <benefit.icon className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-foreground mb-1">{benefit.title}</h3>
-                      <p className="text-sm text-muted-foreground">{benefit.description}</p>
-                    </div>
-                  </div>
-                </FadeIn>
-              ))}
-            </div>
           </div>
         </section>
 

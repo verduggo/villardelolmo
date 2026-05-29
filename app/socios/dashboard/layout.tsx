@@ -10,7 +10,6 @@ import {
   Home,
   User,
   CreditCard,
-  Gift,
   Settings,
   LogOut,
   Menu,
@@ -23,7 +22,6 @@ const navigation = [
   { name: "Inicio", href: "/socios/dashboard", icon: Home },
   { name: "Mi Perfil", href: "/socios/dashboard/perfil", icon: User },
   { name: "Carnet Digital", href: "/socios/dashboard/carnet", icon: CreditCard },
-  { name: "Beneficios", href: "/socios/dashboard/beneficios", icon: Gift },
   { name: "Ajustes", href: "/socios/dashboard/ajustes", icon: Settings },
 ]
 

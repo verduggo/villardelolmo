@@ -1,53 +1,132 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, ArrowUpRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion"
+import { createClient } from "@/lib/supabase/client"
+import type { Database } from "@/lib/database.types"
 
-export const allNews = [
+type Noticia = Database["public"]["Tables"]["noticias"]["Row"]
+
+// Datos de fallback para cuando no hay conexión a Supabase
+const fallbackNews = [
   {
-    id: 1,
-    category: "Primer Equipo",
-    date: "28 Abril 2026",
-    title: "Victoria contundente en el derbi comarcal",
-    excerpt: "El equipo se impuso por 3-0 en un partido que dominó de principio a fin ante la afición local.",
+    id: "1",
+    categoria_id: null,
+    fecha_publicacion: "2026-04-28",
+    titulo: "Victoria contundente en el derbi comarcal",
+    extracto: "El equipo se impuso por 3-0 en un partido que dominó de principio a fin ante la afición local.",
     slug: "victoria-derbi-comarcal",
-    image: "/images/hero-stadium.jpg"
+    imagen_principal: "/images/hero-stadium.jpg",
+    contenido: "",
+    estado: "publicada" as const,
+    destacada: true,
+    autor_id: null,
+    meta_titulo: null,
+    meta_descripcion: null,
+    galeria: null,
+    created_at: "",
+    updated_at: "",
   },
   {
-    id: 2,
-    category: "Cantera",
-    date: "25 Abril 2026",
-    title: "El Alevín A, campeón de su grupo",
-    excerpt: "Los más pequeños del club consiguen el título con una temporada impecable.",
+    id: "2",
+    categoria_id: null,
+    fecha_publicacion: "2026-04-25",
+    titulo: "El Alevín A, campeón de su grupo",
+    extracto: "Los más pequeños del club consiguen el título con una temporada impecable.",
     slug: "alevin-campeon-grupo",
-    image: "/images/hero-stadium.jpg"
+    imagen_principal: "/images/hero-stadium.jpg",
+    contenido: "",
+    estado: "publicada" as const,
+    destacada: false,
+    autor_id: null,
+    meta_titulo: null,
+    meta_descripcion: null,
+    galeria: null,
+    created_at: "",
+    updated_at: "",
   },
   {
-    id: 3,
-    category: "Club",
-    date: "20 Abril 2026",
-    title: "Jornada de puertas abiertas",
-    excerpt: "Este sábado abrimos nuestras puertas a todas las familias que quieran conocer el proyecto.",
+    id: "3",
+    categoria_id: null,
+    fecha_publicacion: "2026-04-20",
+    titulo: "Jornada de puertas abiertas",
+    extracto: "Este sábado abrimos nuestras puertas a todas las familias que quieran conocer el proyecto.",
     slug: "jornada-puertas-abiertas",
-    image: "/images/hero-stadium.jpg"
+    imagen_principal: "/images/hero-stadium.jpg",
+    contenido: "",
+    estado: "publicada" as const,
+    destacada: false,
+    autor_id: null,
+    meta_titulo: null,
+    meta_descripcion: null,
+    galeria: null,
+    created_at: "",
+    updated_at: "",
   },
   {
-    id: 4,
-    category: "Primer Equipo",
-    date: "18 Abril 2026",
-    title: "Nuevas equipaciones para la temporada",
-    excerpt: "Diseño que mantiene la esencia verdiblanca con toques modernos para la próxima temporada.",
+    id: "4",
+    categoria_id: null,
+    fecha_publicacion: "2026-04-18",
+    titulo: "Nuevas equipaciones para la temporada",
+    extracto: "Diseño que mantiene la esencia verdiblanca con toques modernos para la próxima temporada.",
     slug: "nuevas-equipaciones-temporada",
-    image: "/images/hero-stadium.jpg"
+    imagen_principal: "/images/hero-stadium.jpg",
+    contenido: "",
+    estado: "publicada" as const,
+    destacada: false,
+    autor_id: null,
+    meta_titulo: null,
+    meta_descripcion: null,
+    galeria: null,
+    created_at: "",
+    updated_at: "",
   },
 ]
 
 export function NewsSection() {
-  const featured = allNews[0]
-  const rest = allNews.slice(1, 4)
+  const [news, setNews] = useState<Noticia[]>(fallbackNews)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchNews() {
+      try {
+        const supabase = createClient()
+        const { data, error } = await supabase
+          .from("noticias")
+          .select("*")
+          .eq("estado", "publicada")
+          .order("fecha_publicacion", { ascending: false })
+          .limit(4)
+
+        if (error) throw error
+        if (data && data.length > 0) {
+          setNews(data)
+        }
+      } catch (error) {
+        console.log("[v0] Using fallback news data")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchNews()
+  }, [])
+
+  const featured = news[0]
+  const rest = news.slice(1, 4)
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return ""
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    })
+  }
 
   return (
     <section className="py-24 md:py-32 bg-background">
@@ -82,8 +161,8 @@ export function NewsSection() {
               <article>
                 <div className="aspect-[16/10] bg-muted mb-6 overflow-hidden relative">
                   <Image
-                    src={featured.image}
-                    alt={featured.title}
+                    src={featured.imagen_principal || "/images/hero-stadium.jpg"}
+                    alt={featured.titulo}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
@@ -97,18 +176,18 @@ export function NewsSection() {
                 </div>
                 <div className="flex items-center gap-4 mb-4">
                   <span className="text-xs font-semibold text-primary uppercase tracking-[0.15em]">
-                    {featured.category}
+                    Noticia
                   </span>
                   <span className="w-1 h-1 bg-muted-foreground rounded-full" />
                   <span className="text-xs text-muted-foreground tracking-wide">
-                    {featured.date}
+                    {formatDate(featured.fecha_publicacion)}
                   </span>
                 </div>
                 <h3 className="text-2xl md:text-3xl font-bold text-foreground group-hover:text-primary transition-colors mb-4 tracking-tight">
-                  {featured.title}
+                  {featured.titulo}
                 </h3>
                 <p className="text-muted-foreground leading-relaxed max-w-xl">
-                  {featured.excerpt}
+                  {featured.extracto}
                 </p>
               </article>
             </Link>
@@ -123,8 +202,8 @@ export function NewsSection() {
                     <article className="flex gap-5">
                       <div className="w-24 h-24 md:w-28 md:h-28 bg-muted shrink-0 overflow-hidden relative">
                         <Image
-                          src={item.image}
-                          alt={item.title}
+                          src={item.imagen_principal || "/images/hero-stadium.jpg"}
+                          alt={item.titulo}
                           fill
                           className="object-cover transition-transform duration-500 group-hover:scale-110"
                         />
@@ -132,14 +211,14 @@ export function NewsSection() {
                       <div className="flex-1 min-w-0 flex flex-col justify-center">
                         <div className="flex items-center gap-3 mb-2">
                           <span className="text-[10px] font-semibold text-primary uppercase tracking-[0.15em]">
-                            {item.category}
+                            Noticia
                           </span>
                           <span className="text-[10px] text-muted-foreground tracking-wide">
-                            {item.date}
+                            {formatDate(item.fecha_publicacion)}
                           </span>
                         </div>
                         <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 tracking-tight">
-                          {item.title}
+                          {item.titulo}
                         </h3>
                       </div>
                     </article>
@@ -156,3 +235,6 @@ export function NewsSection() {
     </section>
   )
 }
+
+// Export for backward compatibility
+export const allNews = fallbackNews

@@ -10,18 +10,44 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowLeft, ArrowRight, Mail, MapPin, Phone, Send, CheckCircle } from "lucide-react"
+import { ArrowLeft, ArrowRight, Mail, MapPin, Phone, Send, CheckCircle, AlertCircle } from "lucide-react"
 
 export default function ContactoPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [formData, setFormData] = useState({
+    nombre: "",
+    email: "",
+    asunto: "",
+    mensaje: ""
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    setIsSubmitting(false)
-    setSubmitted(true)
+    setError(null)
+
+    try {
+      const response = await fetch("/api/contacto", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Error al enviar el mensaje")
+      }
+
+      setSubmitted(true)
+      setFormData({ nombre: "", email: "", asunto: "", mensaje: "" })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al enviar el mensaje")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -170,6 +196,8 @@ export default function ContactoPage() {
                             id="nombre" 
                             placeholder="Tu nombre"
                             required
+                            value={formData.nombre}
+                            onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
                             className="h-14 bg-background/5 border-background/10 text-background placeholder:text-background/30 focus:border-primary"
                           />
                         </div>
@@ -182,10 +210,18 @@ export default function ContactoPage() {
                             type="email"
                             placeholder="tu@email.com"
                             required
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                             className="h-14 bg-background/5 border-background/10 text-background placeholder:text-background/30 focus:border-primary"
                           />
                         </div>
                       </div>
+                      {error && (
+                        <div className="flex items-center gap-2 p-4 bg-red-500/20 text-red-200 text-sm">
+                          <AlertCircle className="h-4 w-4 shrink-0" />
+                          {error}
+                        </div>
+                      )}
                       <div className="space-y-2">
                         <Label htmlFor="asunto" className="text-background/60 text-xs uppercase tracking-[0.15em]">
                           Asunto
@@ -194,6 +230,8 @@ export default function ContactoPage() {
                           id="asunto" 
                           placeholder="Motivo de tu consulta"
                           required
+                          value={formData.asunto}
+                          onChange={(e) => setFormData({ ...formData, asunto: e.target.value })}
                           className="h-14 bg-background/5 border-background/10 text-background placeholder:text-background/30 focus:border-primary"
                         />
                       </div>
@@ -206,6 +244,8 @@ export default function ContactoPage() {
                           placeholder="Escribe tu mensaje aquí..."
                           rows={6}
                           required
+                          value={formData.mensaje}
+                          onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
                           className="bg-background/5 border-background/10 text-background placeholder:text-background/30 focus:border-primary resize-none"
                         />
                       </div>

@@ -1,39 +1,49 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { FadeIn } from "@/components/motion"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
+import { createClient } from "@/lib/supabase/client"
+import type { Database } from "@/lib/database.types"
 
-const equipos = [
+type Equipo = Database["public"]["Tables"]["equipos"]["Row"]
+
+const fallbackEquipos = [
   {
+    id: "1",
     nombre: "Infantil",
     temporada: "Temporada 26-27",
     descripcion: "Nuestros jugadores de categoría infantil, formando los futbolistas del mañana con dedicación y pasión.",
     imagen: "/images/equipo-infantil.jpg",
   },
   {
+    id: "2",
     nombre: "Cadete",
     temporada: "Temporada 26-27",
     descripcion: "El equipo cadete trabaja cada día para consolidar los valores del club sobre el terreno de juego.",
     imagen: "/images/equipo-cadete.jpg",
   },
   {
+    id: "3",
     nombre: "Juvenil",
     temporada: "Temporada 26-27",
     descripcion: "Los juveniles representan la cantera más competitiva del club, con miras a dar el salto al fútbol senior.",
     imagen: "/images/equipo-juvenil.jpg",
   },
   {
+    id: "4",
     nombre: "Femenino",
     temporada: "Temporada 26-27",
     descripcion: "Nuestro equipo femenino, referente del fútbol femenino en la comarca este de Madrid.",
     imagen: "/images/equipo-femenino.jpg",
   },
   {
+    id: "5",
     nombre: "Sénior",
     temporada: "Temporada 26-27",
     descripcion: "El primer equipo del club, el buque insignia de la U.D. Villar del Olmo en la competición federada.",
@@ -42,6 +52,39 @@ const equipos = [
 ]
 
 export default function EquiposPage() {
+  const [equipos, setEquipos] = useState(fallbackEquipos)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchEquipos() {
+      try {
+        const supabase = createClient()
+        const { data, error } = await supabase
+          .from("equipos")
+          .select("*")
+          .eq("activo", true)
+          .order("nombre", { ascending: true })
+
+        if (error) throw error
+        if (data && data.length > 0) {
+          setEquipos(data.map(e => ({
+            id: e.id,
+            nombre: e.nombre,
+            temporada: e.temporada,
+            descripcion: e.descripcion || "",
+            imagen: e.foto_equipo || "/images/equipo-senior.jpg"
+          })))
+        }
+      } catch (error) {
+        console.log("[v0] Using fallback equipos data")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchEquipos()
+  }, [])
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
@@ -87,36 +130,42 @@ export default function EquiposPage() {
         {/* Equipos Grid */}
         <section className="py-24 md:py-32 bg-background">
           <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {equipos.map((equipo, i) => (
-                <FadeIn key={equipo.nombre} delay={i * 0.1}>
-                  <div className="group flex flex-col bg-background border border-border overflow-hidden hover:border-primary transition-colors duration-300">
-                    <div className="relative aspect-[4/3] w-full overflow-hidden">
-                      <Image
-                        src={equipo.imagen}
-                        alt={`Equipo ${equipo.nombre} ${equipo.temporada}`}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                      <div className="absolute bottom-0 left-0 right-0 p-5">
-                        <span className="text-xs font-semibold tracking-[0.2em] text-primary uppercase">
-                          {equipo.temporada}
-                        </span>
+            {loading ? (
+              <div className="flex items-center justify-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {equipos.map((equipo, i) => (
+                  <FadeIn key={equipo.id} delay={i * 0.1}>
+                    <div className="group flex flex-col bg-background border border-border overflow-hidden hover:border-primary transition-colors duration-300">
+                      <div className="relative aspect-[4/3] w-full overflow-hidden">
+                        <Image
+                          src={equipo.imagen}
+                          alt={`Equipo ${equipo.nombre} ${equipo.temporada}`}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-5">
+                          <span className="text-xs font-semibold tracking-[0.2em] text-primary uppercase">
+                            {equipo.temporada}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-6 flex flex-col gap-3">
+                        <h2 className="text-2xl font-bold tracking-tight text-foreground uppercase">
+                          {equipo.nombre}
+                        </h2>
+                        <p className="text-foreground/60 text-sm leading-relaxed">
+                          {equipo.descripcion}
+                        </p>
                       </div>
                     </div>
-                    <div className="p-6 flex flex-col gap-3">
-                      <h2 className="text-2xl font-bold tracking-tight text-foreground uppercase">
-                        {equipo.nombre}
-                      </h2>
-                      <p className="text-foreground/60 text-sm leading-relaxed">
-                        {equipo.descripcion}
-                      </p>
-                    </div>
-                  </div>
-                </FadeIn>
-              ))}
-            </div>
+                  </FadeIn>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </main>

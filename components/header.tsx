@@ -69,13 +69,13 @@ export function Header() {
             : "bg-transparent"
         )}
       >
-        <nav className="mx-auto flex items-center justify-between px-6 py-4 lg:px-12 xl:px-20">
-          <Link href="/" className="flex items-center gap-4 group">
+        <nav className="mx-auto flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4 lg:px-12 xl:px-20">
+          <Link href="/" className="flex items-center gap-2 sm:gap-4 group shrink-0">
             <motion.div
               whileHover={{ rotate: 5 }}
               transition={{ duration: 0.3 }}
             >
-              <ClubLogo className="h-12 w-12 transition-transform" />
+              <ClubLogo className="h-14 w-14 sm:h-16 sm:w-16 transition-transform" />
             </motion.div>
             <div className="hidden sm:block">
               <span className={cn(
@@ -159,7 +159,7 @@ export function Header() {
             <Link href="/socios/login">
               <motion.span 
                 className={cn(
-                  "text-xs font-semibold tracking-[0.1em] transition-colors cursor-pointer",
+                  "text-xs font-semibold tracking-[0.1em] transition-colors cursor-pointer whitespace-nowrap",
                   scrolled ? "text-muted-foreground hover:text-foreground" : "text-white/70 hover:text-white"
                 )}
                 whileHover={{ x: 3 }}
@@ -173,7 +173,7 @@ export function Header() {
                 whileTap={{ scale: 0.98 }}
               >
                 <Button 
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold tracking-[0.1em] px-6 py-5 group"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold tracking-[0.1em] px-4 py-5 group whitespace-nowrap"
                 >
                   HAZTE SOCIO
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
