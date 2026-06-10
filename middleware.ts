@@ -30,6 +30,12 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
+  // Leer el rol desde los metadatos del usuario de Supabase Auth
+  const appRol = user?.app_metadata?.rol ?? user?.app_metadata?.role
+  const userRol = user?.user_metadata?.rol ?? user?.user_metadata?.role
+  const rol = (appRol ?? userRol ?? null) as string | null
+  const isAdmin = rol !== null && ["admin", "editor"].includes(rol)
+
   // Proteger rutas /admin (excepto la propia página de login)
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
     if (!user) {
@@ -39,14 +45,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url)
     }
 
-    // Verificar rol de admin/editor
-    const { data: perfil } = await supabase
-      .from("usuarios")
-      .select("rol, activo")
-      .eq("auth_id", user.id)
-      .single()
-
-    if (!perfil || !perfil.activo || !["admin", "editor"].includes(perfil.rol)) {
+    if (!isAdmin) {
       const url = request.nextUrl.clone()
       url.pathname = "/admin/login"
       url.searchParams.set("error", "unauthorized")
@@ -54,19 +53,11 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Si ya está logueado y va al login, redirigir al panel
-  if (pathname === "/admin/login" && user) {
-    const { data: perfil } = await supabase
-      .from("usuarios")
-      .select("rol, activo")
-      .eq("auth_id", user.id)
-      .single()
-
-    if (perfil && perfil.activo && ["admin", "editor"].includes(perfil.rol)) {
-      const url = request.nextUrl.clone()
-      url.pathname = "/admin"
-      return NextResponse.redirect(url)
-    }
+  // Si ya está logueado como admin y va al login, redirigir al panel
+  if (pathname === "/admin/login" && user && isAdmin) {
+    const url = request.nextUrl.clone()
+    url.pathname = "/admin"
+    return NextResponse.redirect(url)
   }
 
   return supabaseResponse
