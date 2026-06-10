@@ -164,3 +164,36 @@ export async function toggleImagenPublicada(id: string, publicada: boolean) {
 export async function toggleImagenDestacada(id: string, destacada: boolean) {
   return updateImagen(id, { destacada })
 }
+
+// ============================================
+// SUBIR ARCHIVO A SUPABASE STORAGE
+// ============================================
+
+const BUCKET = "galeria"
+
+export async function uploadImagenFile(file: File): Promise<string> {
+  const supabase = createClient()
+
+  // Generar nombre único para evitar colisiones
+  const ext = file.name.split(".").pop()
+  const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+
+  const { error: uploadError } = await supabase.storage
+    .from(BUCKET)
+    .upload(fileName, file, {
+      cacheControl: "3600",
+      upsert: false,
+    })
+
+  if (uploadError) {
+    console.error("Error uploading file:", uploadError)
+    throw new Error(
+      uploadError.message.includes("Bucket not found")
+        ? "El bucket 'galeria' no existe. Créalo en Supabase Storage (público)."
+        : uploadError.message
+    )
+  }
+
+  const { data } = supabase.storage.from(BUCKET).getPublicUrl(fileName)
+  return data.publicUrl
+}

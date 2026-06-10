@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { getGaleria, createImagen, deleteImagen, toggleImagenPublicada, toggleImagenDestacada } from "@/lib/supabase/galeria"
+import { getGaleria, createImagen, deleteImagen, toggleImagenPublicada, toggleImagenDestacada, uploadImagenFile } from "@/lib/supabase/galeria"
 
 interface GaleriaItem {
   id: string
@@ -85,6 +85,8 @@ export default function AdminGaleriaPage() {
     imagen_url: "",
     album: ""
   })
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   useEffect(() => {
     loadGaleria()
@@ -113,16 +115,55 @@ export default function AdminGaleriaPage() {
     return matchesSearch && matchesAlbum
   })
 
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!file.type.startsWith("image/")) {
+      setError("El archivo debe ser una imagen")
+      return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError("La imagen no puede superar los 5MB")
+      return
+    }
+
+    setError(null)
+    setSelectedFile(file)
+    setPreviewUrl(URL.createObjectURL(file))
+    // Autocompletar título con el nombre del archivo si está vacío
+    if (!formData.titulo) {
+      setFormData({ ...formData, titulo: file.name.replace(/\.[^.]+$/, "") })
+    }
+  }
+
+  function resetForm() {
+    setFormData({ titulo: "", descripcion: "", imagen_url: "", album: "" })
+    setSelectedFile(null)
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
+    setPreviewUrl(null)
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+
+    if (!selectedFile) {
+      setError("Selecciona una imagen para subir")
+      return
+    }
+
     setSubmitting(true)
     setError(null)
 
     try {
+      // 1. Subir el archivo a Supabase Storage
+      const imageUrl = await uploadImagenFile(selectedFile)
+
+      // 2. Guardar el registro en la tabla galeria
       const newImage = await createImagen({
         titulo: formData.titulo,
         descripcion: formData.descripcion || null,
-        imagen_url: formData.imagen_url,
+        imagen_url: imageUrl,
         album: formData.album || null,
         publicada: true,
         destacada: false
@@ -130,11 +171,11 @@ export default function AdminGaleriaPage() {
       
       setGaleria([newImage, ...galeria])
       setShowModal(false)
-      setFormData({ titulo: "", descripcion: "", imagen_url: "", album: "" })
-      setSuccess("Imagen añadida correctamente")
+      resetForm()
+      setSuccess("Imagen subida y guardada correctamente")
       setTimeout(() => setSuccess(null), 3000)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al añadir imagen")
+      setError(err instanceof Error ? err.message : "Error al subir imagen")
     } finally {
       setSubmitting(false)
     }
@@ -402,7 +443,7 @@ export default function AdminGaleriaPage() {
             <div className="flex items-center justify-between p-6 border-b border-zinc-200">
               <h2 className="text-xl font-heading font-bold">Nueva Imagen</h2>
               <button
-                onClick={() => setShowModal(false)}
+                onClick={() => { setShowModal(false); resetForm() }}
                 className="p-2 text-zinc-400 hover:text-zinc-600"
               >
                 <X className="w-5 h-5" />
@@ -420,17 +461,39 @@ export default function AdminGaleriaPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="imagen_url">URL de la imagen *</Label>
-                <Input
-                  id="imagen_url"
-                  value={formData.imagen_url}
-                  onChange={(e) => setFormData({ ...formData, imagen_url: e.target.value })}
-                  placeholder="https://... o /images/..."
-                  required
+                <Label htmlFor="archivo">Imagen *</Label>
+                {previewUrl ? (
+                  <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-zinc-200">
+                    <Image src={previewUrl} alt="Previsualización" fill className="object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedFile(null)
+                        if (previewUrl) URL.revokeObjectURL(previewUrl)
+                        setPreviewUrl(null)
+                      }}
+                      className="absolute top-2 right-2 p-1.5 bg-black/60 text-white rounded-lg hover:bg-black/80"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <label
+                    htmlFor="archivo"
+                    className="flex flex-col items-center justify-center gap-2 aspect-video w-full rounded-xl border-2 border-dashed border-zinc-300 hover:border-primary hover:bg-zinc-50 cursor-pointer transition-colors"
+                  >
+                    <Upload className="w-8 h-8 text-zinc-400" />
+                    <span className="text-sm text-zinc-600">Haz clic para subir una imagen</span>
+                    <span className="text-xs text-zinc-400">JPG, PNG o WebP (máx. 5MB)</span>
+                  </label>
+                )}
+                <input
+                  id="archivo"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
                 />
-                <p className="text-xs text-zinc-500">
-                  Puedes usar una URL externa o una ruta local como /images/foto.jpg
-                </p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="album">Álbum</Label>
@@ -461,7 +524,7 @@ export default function AdminGaleriaPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => { setShowModal(false); resetForm() }}
                   className="flex-1"
                 >
                   Cancelar
@@ -471,7 +534,7 @@ export default function AdminGaleriaPage() {
                   disabled={submitting}
                   className="flex-1 bg-primary hover:bg-primary/90"
                 >
-                  {submitting ? "Guardando..." : "Guardar"}
+                  {submitting ? "Subiendo..." : "Guardar"}
                 </Button>
               </div>
             </form>
