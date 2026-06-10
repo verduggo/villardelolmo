@@ -16,15 +16,17 @@ import {
   Save,
   CheckCircle,
   AlertCircle,
-  Loader2
+  Loader2,
+  Copy,
+  KeyRound
 } from "lucide-react"
-import { createClient } from "@/lib/supabase/client"
 
 export default function NuevoSocioPage() {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [credenciales, setCredenciales] = useState<{ email: string; password: string } | null>(null)
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -44,43 +46,27 @@ export default function NuevoSocioPage() {
     setSaving(true)
     setError(null)
 
+    if (!formData.email) {
+      setError("El email es obligatorio para crear el acceso del socio.")
+      setSaving(false)
+      return
+    }
+
     try {
-      const supabase = createClient()
-      
-      // Generate numero_socio
-      const { count } = await supabase
-        .from("socios")
-        .select("*", { count: "exact", head: true })
-      
-      const numeroSocio = String((count || 0) + 1).padStart(5, "0")
+      const res = await fetch("/api/admin/socios", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
 
-      const { error: insertError } = await supabase
-        .from("socios")
-        .insert({
-          numero_socio: numeroSocio,
-          nombre: formData.nombre,
-          apellidos: formData.apellidos,
-          email: formData.email || "",
-          telefono: formData.telefono || null,
-          dni: formData.dni || null,
-          direccion: formData.direccion || null,
-          codigo_postal: formData.codigo_postal || null,
-          localidad: formData.localidad || null,
-          fecha_nacimiento: formData.fecha_nacimiento || null,
-          tipo: formData.tipo_socio,
-          estado: "activo",
-          fecha_alta: new Date().toISOString().split("T")[0],
-          cuota_anual: formData.tipo_socio === "Infantil" ? 50 : 
-                       formData.tipo_socio === "Juvenil" ? 75 :
-                       formData.tipo_socio === "Veterano" ? 80 : 100
-        })
+      const data = await res.json()
 
-      if (insertError) throw insertError
+      if (!res.ok) {
+        throw new Error(data.error || "Error al registrar el socio")
+      }
 
+      setCredenciales(data.credenciales)
       setSaved(true)
-      setTimeout(() => {
-        router.push("/admin/socios")
-      }, 1500)
     } catch (err) {
       console.log("[v0] Error creating socio:", err)
       setError(err instanceof Error ? err.message : "Error al registrar el socio")
@@ -108,15 +94,70 @@ export default function NuevoSocioPage() {
         </div>
       </motion.div>
 
-      {/* Success message */}
-      {saved && (
+      {/* Credenciales generadas */}
+      {saved && credenciales && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3"
+          className="bg-green-50 border border-green-200 rounded-xl p-6 space-y-4"
         >
-          <CheckCircle className="w-5 h-5 text-green-600" />
-          <span className="text-green-800 font-medium">Socio registrado correctamente. Redirigiendo...</span>
+          <div className="flex items-center gap-3">
+            <CheckCircle className="w-6 h-6 text-green-600" />
+            <div>
+              <h3 className="font-heading font-bold text-green-900">Socio registrado correctamente</h3>
+              <p className="text-sm text-green-800">
+                Se ha creado el acceso del socio. Comparte estas credenciales con él: solo se muestran una vez.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg border border-green-200 p-4 space-y-3">
+            <div className="flex items-center gap-3">
+              <KeyRound className="w-5 h-5 text-zinc-400 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-zinc-500">Email de acceso</p>
+                <p className="font-mono text-sm text-zinc-900 truncate">{credenciales.email}</p>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => navigator.clipboard.writeText(credenciales.email)}
+              >
+                <Copy className="w-4 h-4" />
+              </Button>
+            </div>
+            <div className="flex items-center gap-3 border-t border-zinc-100 pt-3">
+              <KeyRound className="w-5 h-5 text-zinc-400 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-zinc-500">Contraseña temporal</p>
+                <p className="font-mono text-sm text-zinc-900">{credenciales.password}</p>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => navigator.clipboard.writeText(credenciales.password)}
+              >
+                <Copy className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigator.clipboard.writeText(`Email: ${credenciales.email}\nContraseña: ${credenciales.password}`)}
+              className="gap-2"
+            >
+              <Copy className="w-4 h-4" />
+              Copiar ambos
+            </Button>
+            <Link href="/admin/socios">
+              <Button className="bg-primary hover:bg-primary/90">Ir a la lista de socios</Button>
+            </Link>
+          </div>
         </motion.div>
       )}
 
@@ -132,6 +173,7 @@ export default function NuevoSocioPage() {
         </motion.div>
       )}
 
+      {!saved && (
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Datos personales */}
         <motion.div
@@ -202,12 +244,13 @@ export default function NuevoSocioPage() {
 
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Email *</Label>
               <Input
                 id="email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
               />
             </div>
             <div className="space-y-2">
@@ -345,6 +388,7 @@ export default function NuevoSocioPage() {
           </Button>
         </motion.div>
       </form>
+      )}
     </div>
   )
 }
