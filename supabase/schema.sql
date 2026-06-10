@@ -430,70 +430,66 @@ CREATE POLICY "Galería publicada es pública" ON public.galeria FOR SELECT USIN
 CREATE POLICY "Cualquiera puede enviar mensaje de contacto" ON public.contacto_mensajes FOR INSERT WITH CHECK (true);
 CREATE POLICY "Cualquiera puede enviar inscripción" ON public.inscripciones FOR INSERT WITH CHECK (true);
 
--- Políticas de admin (usuarios autenticados con rol admin)
-CREATE POLICY "Admins tienen acceso total a usuarios" ON public.usuarios FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+-- Funciones auxiliares: leen el rol desde el JWT (app_metadata.rol).
+-- No consultan ninguna tabla, por lo que evitan la recursión infinita en RLS.
+CREATE OR REPLACE FUNCTION public.es_staff()
+RETURNS boolean LANGUAGE sql STABLE AS $$
+  SELECT coalesce((auth.jwt() -> 'app_metadata' ->> 'rol') IN ('admin', 'editor'), false);
+$$;
 
-CREATE POLICY "Admins tienen acceso total a socios" ON public.socios FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE OR REPLACE FUNCTION public.es_admin()
+RETURNS boolean LANGUAGE sql STABLE AS $$
+  SELECT coalesce((auth.jwt() -> 'app_metadata' ->> 'rol') = 'admin', false);
+$$;
 
-CREATE POLICY "Admins tienen acceso total a noticias" ON public.noticias FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol IN ('admin', 'editor'))
-);
+-- Políticas de admin (rol leído del JWT, sin consultar la tabla usuarios)
+CREATE POLICY "Staff gestiona usuarios" ON public.usuarios FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
 
-CREATE POLICY "Admins tienen acceso total a contacto" ON public.contacto_mensajes FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE POLICY "Staff gestiona socios" ON public.socios FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
 
-CREATE POLICY "Admins tienen acceso total a inscripciones" ON public.inscripciones FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE POLICY "Staff gestiona noticias" ON public.noticias FOR ALL
+  USING (public.es_staff()) WITH CHECK (public.es_staff());
 
-CREATE POLICY "Admins pueden gestionar equipos" ON public.equipos FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE POLICY "Staff gestiona contacto" ON public.contacto_mensajes FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
 
-CREATE POLICY "Admins pueden gestionar jugadores" ON public.jugadores FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE POLICY "Staff gestiona inscripciones" ON public.inscripciones FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
 
-CREATE POLICY "Admins pueden gestionar instalaciones" ON public.instalaciones FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE POLICY "Staff gestiona equipos" ON public.equipos FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
 
-CREATE POLICY "Admins pueden gestionar partidos" ON public.partidos FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE POLICY "Staff gestiona jugadores" ON public.jugadores FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
 
-CREATE POLICY "Admins pueden gestionar eventos" ON public.eventos FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE POLICY "Staff gestiona instalaciones" ON public.instalaciones FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
 
-CREATE POLICY "Admins pueden gestionar patrocinadores" ON public.patrocinadores FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE POLICY "Staff gestiona partidos" ON public.partidos FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
 
-CREATE POLICY "Admins pueden gestionar documentos" ON public.documentos FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE POLICY "Staff gestiona eventos" ON public.eventos FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
 
-CREATE POLICY "Admins pueden gestionar categorías" ON public.categorias_equipo FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE POLICY "Staff gestiona patrocinadores" ON public.patrocinadores FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
 
-CREATE POLICY "Admins pueden gestionar categorías noticia" ON public.categorias_noticia FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE POLICY "Staff gestiona documentos" ON public.documentos FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
 
-CREATE POLICY "Admins pueden gestionar configuración" ON public.configuracion_web FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE POLICY "Staff gestiona categorias equipo" ON public.categorias_equipo FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
 
-CREATE POLICY "Admins pueden gestionar galería" ON public.galeria FOR ALL USING (
-  auth.uid() IN (SELECT auth_id FROM public.usuarios WHERE rol = 'admin')
-);
+CREATE POLICY "Staff gestiona categorias noticia" ON public.categorias_noticia FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
+
+CREATE POLICY "Staff gestiona configuracion" ON public.configuracion_web FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
+
+CREATE POLICY "Staff gestiona galeria" ON public.galeria FOR ALL
+  USING (public.es_admin()) WITH CHECK (public.es_admin());
 
 -- ============================================
 -- VISTAS útiles
