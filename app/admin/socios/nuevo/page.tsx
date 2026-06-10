@@ -35,7 +35,7 @@ export default function NuevoSocioPage() {
     codigo_postal: "",
     localidad: "",
     fecha_nacimiento: "",
-    tipo_socio: "adulto" as "infantil" | "juvenil" | "adulto" | "veterano",
+    tipo_socio: "Adulto" as "Infantil" | "Juvenil" | "Adulto" | "Veterano",
     metodo_pago: "domiciliacion"
   })
 
@@ -60,19 +60,19 @@ export default function NuevoSocioPage() {
           numero_socio: numeroSocio,
           nombre: formData.nombre,
           apellidos: formData.apellidos,
-          email: formData.email || null,
+          email: formData.email || "",
           telefono: formData.telefono || null,
           dni: formData.dni || null,
           direccion: formData.direccion || null,
           codigo_postal: formData.codigo_postal || null,
           localidad: formData.localidad || null,
           fecha_nacimiento: formData.fecha_nacimiento || null,
-          tipo_socio: formData.tipo_socio,
+          tipo: formData.tipo_socio,
           estado: "activo",
           fecha_alta: new Date().toISOString().split("T")[0],
-          cuota_anual: formData.tipo_socio === "infantil" ? 50 : 
-                       formData.tipo_socio === "juvenil" ? 75 :
-                       formData.tipo_socio === "veterano" ? 80 : 100
+          cuota_anual: formData.tipo_socio === "Infantil" ? 50 : 
+                       formData.tipo_socio === "Juvenil" ? 75 :
+                       formData.tipo_socio === "Veterano" ? 80 : 100
         })
 
       if (insertError) throw insertError
@@ -261,10 +261,10 @@ export default function NuevoSocioPage() {
 
           <div className="grid sm:grid-cols-4 gap-3">
             {[
-              { id: "infantil", label: "Infantil", desc: "Hasta 12 años", cuota: "50€/año" },
-              { id: "juvenil", label: "Juvenil", desc: "13-17 años", cuota: "75€/año" },
-              { id: "adulto", label: "Adulto", desc: "18-64 años", cuota: "100€/año" },
-              { id: "veterano", label: "Veterano", desc: "65+ años", cuota: "80€/año" }
+              { id: "Infantil", label: "Infantil", desc: "Hasta 12 años", cuota: "50€/año" },
+              { id: "Juvenil", label: "Juvenil", desc: "13-17 años", cuota: "75€/año" },
+              { id: "Adulto", label: "Adulto", desc: "18-64 años", cuota: "100€/año" },
+              { id: "Veterano", label: "Veterano", desc: "65+ años", cuota: "80€/año" }
             ].map((tipo) => (
               <button
                 key={tipo.id}

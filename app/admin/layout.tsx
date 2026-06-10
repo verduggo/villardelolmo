@@ -2,10 +2,11 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { ClubLogo } from "@/components/club-logo"
 import { Button } from "@/components/ui/button"
+import { createClient } from "@/lib/supabase/client"
 import {
   LayoutDashboard,
   Users,
@@ -19,6 +20,7 @@ import {
   Bell,
   ChevronDown,
   User,
+  Home,
   Image as ImageIcon
 } from "lucide-react"
 
@@ -40,6 +42,23 @@ export default function AdminLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
+
+  // La página de login no usa el layout del panel
+  if (pathname === "/admin/login") {
+    return <>{children}</>
+  }
+
+  const handleLogout = async () => {
+    try {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      router.push("/admin/login")
+      router.refresh()
+    } catch (err) {
+      console.error("Error al cerrar sesión:", err)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-zinc-50">
@@ -119,10 +138,18 @@ export default function AdminLayout({
                 variant="ghost" 
                 className="w-full mt-3 text-zinc-400 hover:text-white hover:bg-zinc-800 justify-start gap-3"
               >
-                <LogOut className="w-4 h-4" />
+                <Home className="w-4 h-4" />
                 Volver al sitio
               </Button>
             </Link>
+            <Button 
+              variant="ghost" 
+              onClick={handleLogout}
+              className="w-full mt-1 text-red-400 hover:text-red-300 hover:bg-zinc-800 justify-start gap-3"
+            >
+              <LogOut className="w-4 h-4" />
+              Cerrar sesión
+            </Button>
           </div>
         </div>
       </aside>
@@ -186,7 +213,10 @@ export default function AdminLayout({
                         Volver al sitio
                       </Link>
                       <hr className="my-2 border-zinc-200" />
-                      <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                      <button 
+                        onClick={() => { setUserMenuOpen(false); handleLogout() }}
+                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                      >
                         Cerrar sesión
                       </button>
                     </motion.div>
