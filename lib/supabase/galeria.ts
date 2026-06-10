@@ -40,7 +40,11 @@ export async function getGaleria(options?: {
 
   if (error) {
     console.error("Error fetching galeria:", error)
-    return []
+    // PGRST205 = la tabla no existe todavía en Supabase
+    if (error.code === "PGRST205") {
+      throw new Error("TABLE_NOT_FOUND")
+    }
+    throw new Error(error.message)
   }
 
   return data as Galeria[]

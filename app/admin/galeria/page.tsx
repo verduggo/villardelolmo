@@ -36,43 +36,10 @@ interface GaleriaItem {
   created_at: string
 }
 
-// Fallback data
-const fallbackGaleria: GaleriaItem[] = [
-  {
-    id: "1",
-    titulo: "Plantilla 2025-26",
-    descripcion: "Foto oficial del primer equipo",
-    imagen_url: "/images/historia-equipo-real.jpg",
-    album: "Temporada 2025-26",
-    destacada: true,
-    publicada: true,
-    created_at: new Date().toISOString()
-  },
-  {
-    id: "2",
-    titulo: "Campo Municipal",
-    descripcion: "Vista aérea del campo",
-    imagen_url: "/images/instalacion-campo.jpg",
-    album: "Instalaciones",
-    destacada: false,
-    publicada: true,
-    created_at: new Date().toISOString()
-  },
-  {
-    id: "3",
-    titulo: "Vestuarios",
-    descripcion: "Vestuarios renovados",
-    imagen_url: "/images/instalacion-vestuarios.jpg",
-    album: "Instalaciones",
-    destacada: false,
-    publicada: true,
-    created_at: new Date().toISOString()
-  }
-]
-
 export default function AdminGaleriaPage() {
   const [galeria, setGaleria] = useState<GaleriaItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [dbReady, setDbReady] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [albumFilter, setAlbumFilter] = useState<string | null>(null)
   const [showModal, setShowModal] = useState(false)
@@ -95,10 +62,16 @@ export default function AdminGaleriaPage() {
   async function loadGaleria() {
     try {
       const data = await getGaleria()
-      setGaleria(data.length > 0 ? data : fallbackGaleria)
+      setGaleria(data)
+      setDbReady(true)
     } catch (err) {
       console.error("Error loading galeria:", err)
-      setGaleria(fallbackGaleria)
+      if (err instanceof Error && err.message === "TABLE_NOT_FOUND") {
+        setDbReady(false)
+      } else {
+        setError(err instanceof Error ? err.message : "Error al cargar la galería")
+      }
+      setGaleria([])
     } finally {
       setLoading(false)
     }
@@ -230,12 +203,39 @@ export default function AdminGaleriaPage() {
         </div>
         <Button 
           onClick={() => setShowModal(true)}
+          disabled={!dbReady}
           className="bg-primary hover:bg-primary/90 gap-2"
         >
           <Plus className="w-4 h-4" />
           Nueva Imagen
         </Button>
       </div>
+
+      {/* Banner: base de datos no lista */}
+      {!loading && !dbReady && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-6 h-6 text-amber-600 shrink-0 mt-0.5" />
+            <div className="space-y-3">
+              <div>
+                <h3 className="font-semibold text-amber-900">La base de datos no está lista</h3>
+                <p className="text-sm text-amber-800 mt-1">
+                  La tabla <code className="bg-amber-100 px-1.5 py-0.5 rounded font-mono">galeria</code> no existe todavía en Supabase. Hasta que la crees, no se pueden cargar, subir ni borrar imágenes.
+                </p>
+              </div>
+              <div className="text-sm text-amber-800">
+                <p className="font-medium mb-1">Para activarla:</p>
+                <ol className="list-decimal list-inside space-y-1">
+                  <li>Abre tu proyecto en Supabase → <strong>SQL Editor</strong></li>
+                  <li>Ejecuta el contenido de <code className="bg-amber-100 px-1.5 py-0.5 rounded font-mono">supabase/schema.sql</code></li>
+                  <li>Crea un bucket público llamado <code className="bg-amber-100 px-1.5 py-0.5 rounded font-mono">galeria</code> en <strong>Storage</strong></li>
+                  <li>Recarga esta página</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Alerts */}
       {error && (
