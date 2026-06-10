@@ -60,6 +60,23 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // Proteger el área de socios (requiere sesión)
+  if (pathname.startsWith("/socios/dashboard")) {
+    if (!user) {
+      const url = request.nextUrl.clone()
+      url.pathname = "/socios/login"
+      url.searchParams.set("redirect", pathname)
+      return NextResponse.redirect(url)
+    }
+  }
+
+  // Si el socio ya tiene sesión y va al login, llevarlo al dashboard
+  if (pathname === "/socios/login" && user) {
+    const url = request.nextUrl.clone()
+    url.pathname = "/socios/dashboard"
+    return NextResponse.redirect(url)
+  }
+
   return supabaseResponse
 }
 

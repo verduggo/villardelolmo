@@ -4,6 +4,7 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ClubLogo } from "@/components/club-logo"
+import { useSocio } from "@/hooks/use-socio"
 import { 
   Download, 
   Share2, 
@@ -12,23 +13,52 @@ import {
   Calendar,
   User,
   Smartphone,
-  CheckCircle
+  CheckCircle,
+  Loader2,
+  AlertCircle
 } from "lucide-react"
 
-const mockUser = {
-  nombre: "Carlos",
-  apellidos: "García López",
-  numeroSocio: "00247",
-  tipoSocio: "Adulto",
-  fechaAlta: "2018-09-01",
-  validoHasta: "2026-06-30",
-  dni: "12345678A",
-  foto: null
-}
-
 export default function CarnetSocioPage() {
+  const { socio, isLoading, error } = useSocio()
   const [isFlipped, setIsFlipped] = useState(false)
   const [showQR, setShowQR] = useState(false)
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-32">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+
+  if (error || !socio) {
+    return (
+      <div className="max-w-md mx-auto mt-16 text-center space-y-4">
+        <div className="h-14 w-14 rounded-full bg-destructive/10 flex items-center justify-center mx-auto">
+          <AlertCircle className="h-7 w-7 text-destructive" />
+        </div>
+        <h2 className="text-xl font-bold">No pudimos cargar tu carnet</h2>
+        <p className="text-muted-foreground">
+          {error?.message || "No se encontró ningún socio asociado a tu cuenta."}
+        </p>
+      </div>
+    )
+  }
+
+  // Validez: 30 de junio del año siguiente al alta (o del próximo curso)
+  const anioActual = new Date().getFullYear()
+  const mesActual = new Date().getMonth()
+  const validoHasta = new Date(mesActual >= 6 ? anioActual + 1 : anioActual, 5, 30).toISOString()
+
+  const usuario = {
+    nombre: socio.nombre,
+    apellidos: socio.apellidos,
+    numeroSocio: socio.numero_socio,
+    tipoSocio: socio.tipo,
+    fechaAlta: socio.fecha_alta ?? new Date().toISOString(),
+    validoHasta,
+    dni: socio.dni ?? "—",
+  }
 
   return (
     <div className="space-y-8">
@@ -85,16 +115,16 @@ export default function CarnetSocioPage() {
                     <div>
                       <p className="text-white/70 text-xs uppercase tracking-wider mb-1">Nombre</p>
                       <p className="text-white font-heading font-bold text-xl">
-                        {mockUser.nombre} {mockUser.apellidos}
+                        {usuario.nombre} {usuario.apellidos}
                       </p>
                       <div className="flex items-center gap-4 mt-3">
                         <div>
                           <p className="text-white/70 text-xs uppercase tracking-wider">N° Socio</p>
-                          <p className="text-white font-bold">{mockUser.numeroSocio}</p>
+                          <p className="text-white font-bold">{usuario.numeroSocio}</p>
                         </div>
                         <div>
                           <p className="text-white/70 text-xs uppercase tracking-wider">Tipo</p>
-                          <p className="text-white font-bold">{mockUser.tipoSocio}</p>
+                          <p className="text-white font-bold">{usuario.tipoSocio}</p>
                         </div>
                       </div>
                     </div>
@@ -132,8 +162,8 @@ export default function CarnetSocioPage() {
                   </div>
 
                   <div className="flex items-center justify-between text-white/60 text-xs">
-                    <span>Válido hasta: {new Date(mockUser.validoHasta).toLocaleDateString("es-ES")}</span>
-                    <span>DNI: {mockUser.dni}</span>
+                    <span>Válido hasta: {new Date(usuario.validoHasta).toLocaleDateString("es-ES")}</span>
+                    <span>DNI: {usuario.dni}</span>
                   </div>
                 </div>
               </div>
@@ -179,7 +209,7 @@ export default function CarnetSocioPage() {
               <div>
                 <p className="font-semibold text-primary">Carnet Activo</p>
                 <p className="text-sm text-muted-foreground">
-                  Válido hasta el {new Date(mockUser.validoHasta).toLocaleDateString("es-ES", {
+                  Válido hasta el {new Date(usuario.validoHasta).toLocaleDateString("es-ES", {
                     day: "numeric",
                     month: "long",
                     year: "numeric"
@@ -199,7 +229,7 @@ export default function CarnetSocioPage() {
                   <User className="w-5 h-5 text-muted-foreground" />
                   <span className="text-muted-foreground">Titular</span>
                 </div>
-                <span className="font-medium">{mockUser.nombre} {mockUser.apellidos}</span>
+                <span className="font-medium">{usuario.nombre} {usuario.apellidos}</span>
               </div>
               
               <div className="flex items-center justify-between py-3 border-b border-border">
@@ -207,7 +237,7 @@ export default function CarnetSocioPage() {
                   <Shield className="w-5 h-5 text-muted-foreground" />
                   <span className="text-muted-foreground">Número de socio</span>
                 </div>
-                <span className="font-medium font-mono">{mockUser.numeroSocio}</span>
+                <span className="font-medium font-mono">{usuario.numeroSocio}</span>
               </div>
               
               <div className="flex items-center justify-between py-3 border-b border-border">
@@ -216,7 +246,7 @@ export default function CarnetSocioPage() {
                   <span className="text-muted-foreground">Socio desde</span>
                 </div>
                 <span className="font-medium">
-                  {new Date(mockUser.fechaAlta).toLocaleDateString("es-ES", {
+                  {new Date(usuario.fechaAlta).toLocaleDateString("es-ES", {
                     month: "long",
                     year: "numeric"
                   })}
@@ -228,7 +258,7 @@ export default function CarnetSocioPage() {
                   <Shield className="w-5 h-5 text-muted-foreground" />
                   <span className="text-muted-foreground">Categoría</span>
                 </div>
-                <span className="font-medium">Socio {mockUser.tipoSocio}</span>
+                <span className="font-medium">Socio {usuario.tipoSocio}</span>
               </div>
             </div>
           </div>
@@ -277,8 +307,8 @@ export default function CarnetSocioPage() {
                 ))}
               </div>
             </div>
-            <p className="text-lg font-heading font-bold mt-4">Socio #{mockUser.numeroSocio}</p>
-            <p className="text-muted-foreground text-sm">{mockUser.nombre} {mockUser.apellidos}</p>
+            <p className="text-lg font-heading font-bold mt-4">Socio #{usuario.numeroSocio}</p>
+            <p className="text-muted-foreground text-sm">{usuario.nombre} {usuario.apellidos}</p>
             <Button 
               className="mt-6 w-full bg-primary hover:bg-primary/90"
               onClick={() => setShowQR(false)}

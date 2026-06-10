@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -8,21 +9,42 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ClubLogo } from "@/components/club-logo"
 import Link from "next/link"
-import { ArrowLeft, Eye, EyeOff, ArrowRight, Shield } from "lucide-react"
+import { ArrowLeft, Eye, EyeOff, ArrowRight, Shield, AlertCircle } from "lucide-react"
 import { FadeIn, StaggerContainer, ScaleIn } from "@/components/motion"
+import { createClient } from "@/lib/supabase/client"
 
 export default function LoginSociosPage() {
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    setIsLoading(false)
-    alert("Funcionalidad próximamente disponible")
+    setError(null)
+
+    try {
+      const supabase = createClient()
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (signInError) {
+        setError("Email o contraseña incorrectos. Inténtalo de nuevo.")
+        setIsLoading(false)
+        return
+      }
+
+      router.push("/socios/dashboard")
+      router.refresh()
+    } catch {
+      setError("Ha ocurrido un error. Inténtalo de nuevo.")
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -58,6 +80,12 @@ export default function LoginSociosPage() {
 
                 <FadeIn>
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    {error && (
+                      <div className="flex items-start gap-3 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive">
+                        <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+                        <p className="text-sm font-medium">{error}</p>
+                      </div>
+                    )}
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-sm font-semibold">
                         Email

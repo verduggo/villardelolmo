@@ -4,60 +4,16 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useSocio, getIniciales } from "@/hooks/use-socio"
 import { 
   CreditCard, 
   Calendar, 
   TrendingUp,
   ArrowRight,
-  Clock,
   CheckCircle2,
-  Bell
+  AlertCircle,
+  Loader2
 } from "lucide-react"
-
-const stats = [
-  { 
-    label: "Socio desde", 
-    value: "2019", 
-    icon: Calendar, 
-    color: "bg-blue-500" 
-  },
-  { 
-    label: "Años como socio", 
-    value: "6", 
-    icon: TrendingUp, 
-    color: "bg-primary" 
-  },
-  { 
-    label: "Estado", 
-    value: "Activo", 
-    icon: CheckCircle2, 
-    color: "bg-emerald-500" 
-  },
-]
-
-const notifications = [
-  {
-    id: 1,
-    title: "Nuevo partido programado",
-    description: "El próximo partido será el domingo a las 12:00h",
-    time: "Hace 2 horas",
-    unread: true
-  },
-  {
-    id: 2,
-    title: "Descuento disponible",
-    description: "20% de descuento en equipación oficial",
-    time: "Hace 1 día",
-    unread: true
-  },
-  {
-    id: 3,
-    title: "Cuota renovada",
-    description: "Tu cuota de socio ha sido renovada correctamente",
-    time: "Hace 3 días",
-    unread: false
-  }
-]
 
 const quickActions = [
   { 
@@ -65,10 +21,65 @@ const quickActions = [
     description: "Accede a tu carnet digital",
     href: "/socios/dashboard/carnet",
     icon: CreditCard
+  },
+  {
+    title: "Mi perfil",
+    description: "Consulta y edita tus datos",
+    href: "/socios/dashboard/perfil",
+    icon: TrendingUp
   }
 ]
 
 export default function SociosDashboardPage() {
+  const { socio, isLoading, error } = useSocio()
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-32">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+
+  if (error || !socio) {
+    return (
+      <div className="max-w-md mx-auto mt-16 text-center space-y-4">
+        <div className="h-14 w-14 rounded-full bg-destructive/10 flex items-center justify-center mx-auto">
+          <AlertCircle className="h-7 w-7 text-destructive" />
+        </div>
+        <h2 className="text-xl font-bold">No pudimos cargar tus datos</h2>
+        <p className="text-muted-foreground">
+          {error?.message || "No se encontró ningún socio asociado a tu cuenta. Contacta con el club."}
+        </p>
+      </div>
+    )
+  }
+
+  const anioAlta = socio.fecha_alta ? new Date(socio.fecha_alta).getFullYear() : null
+  const aniosComoSocio = anioAlta ? new Date().getFullYear() - anioAlta : null
+  const cuotaAlDia = socio.estado === "activo"
+
+  const stats = [
+    {
+      label: "Socio desde",
+      value: anioAlta ? String(anioAlta) : "—",
+      icon: Calendar,
+      color: "bg-blue-500",
+    },
+    {
+      label: "Años como socio",
+      value: aniosComoSocio !== null ? String(aniosComoSocio) : "—",
+      icon: TrendingUp,
+      color: "bg-primary",
+    },
+    {
+      label: "Estado",
+      value: socio.estado === "activo" ? "Activo" : "Inactivo",
+      icon: CheckCircle2,
+      color: cuotaAlDia ? "bg-emerald-500" : "bg-amber-500",
+    },
+  ]
+
   return (
     <div className="space-y-8">
       {/* Welcome section */}
@@ -80,10 +91,10 @@ export default function SociosDashboardPage() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
-              Bienvenido, Juan
+              Bienvenido, {socio.nombre}
             </h1>
             <p className="text-muted-foreground mt-1">
-              Socio #1234 | Categoría Adulto
+              Socio #{socio.numero_socio} | Categoría {socio.tipo}
             </p>
           </div>
           <Link href="/socios/dashboard/carnet">
@@ -100,9 +111,9 @@ export default function SociosDashboardPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-3 gap-4"
       >
-        {stats.map((stat, index) => (
+        {stats.map((stat) => (
           <Card key={stat.label} className="border-none shadow-sm">
             <CardContent className="p-5">
               <div className="flex items-start justify-between">
@@ -120,12 +131,12 @@ export default function SociosDashboardPage() {
       </motion.div>
 
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Quick actions */}
+        {/* Quick actions + carnet preview */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="lg:col-span-2 space-y-4"
+          className="lg:col-span-3 space-y-4"
         >
           <h2 className="text-lg font-semibold">Acciones rápidas</h2>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -150,29 +161,29 @@ export default function SociosDashboardPage() {
           </div>
 
           {/* Member card preview */}
-          <Card className="border-none shadow-sm overflow-hidden mt-6">
-            <div className="bg-gradient-to-br from-primary via-primary to-accent p-6 text-white">
+          <Card className="border-none shadow-sm overflow-hidden mt-6 max-w-2xl">
+            <div className="bg-gradient-to-br from-primary via-primary to-primary/70 p-6 text-white">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-white/70 text-sm">Carnet de Socio</p>
-                  <h3 className="text-xl font-bold mt-1">Juan García López</h3>
+                  <h3 className="text-xl font-bold mt-1">{socio.nombre} {socio.apellidos}</h3>
                   <p className="text-white/70 text-sm mt-4">N° Socio</p>
-                  <p className="text-2xl font-bold tracking-wider">1234</p>
+                  <p className="text-2xl font-bold tracking-wider">{socio.numero_socio}</p>
                 </div>
                 <div className="text-right">
                   <div className="h-16 w-16 rounded-full bg-white/20 flex items-center justify-center text-2xl font-bold">
-                    JG
+                    {getIniciales(socio.nombre, socio.apellidos)}
                   </div>
-                  <p className="text-white/70 text-xs mt-3">Válido hasta</p>
-                  <p className="font-semibold">06/2026</p>
+                  <p className="text-white/70 text-xs mt-3">Categoría</p>
+                  <p className="font-semibold">{socio.tipo}</p>
                 </div>
               </div>
             </div>
-            <CardContent className="p-4 bg-white">
+            <CardContent className="p-4 bg-card">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                  Cuota al día
+                  <CheckCircle2 className={`h-4 w-4 ${cuotaAlDia ? "text-emerald-500" : "text-amber-500"}`} />
+                  {cuotaAlDia ? "Cuota al día" : "Revisar estado de cuota"}
                 </div>
                 <Link href="/socios/dashboard/carnet">
                   <Button variant="ghost" size="sm" className="gap-1 text-primary">
@@ -181,48 +192,6 @@ export default function SociosDashboardPage() {
                   </Button>
                 </Link>
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Notifications */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Notificaciones</h2>
-            <Button variant="ghost" size="sm" className="text-primary">
-              Ver todas
-            </Button>
-          </div>
-          <Card className="border-none shadow-sm">
-            <CardContent className="p-0 divide-y">
-              {notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={`p-4 hover:bg-muted/50 transition-colors cursor-pointer ${
-                    notification.unread ? "bg-primary/5" : ""
-                  }`}
-                >
-                  <div className="flex gap-3">
-                    <div className={`h-2 w-2 rounded-full mt-2 flex-shrink-0 ${
-                      notification.unread ? "bg-primary" : "bg-transparent"
-                    }`} />
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm">{notification.title}</h4>
-                      <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
-                        {notification.description}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {notification.time}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
             </CardContent>
           </Card>
         </motion.div>

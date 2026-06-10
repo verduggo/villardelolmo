@@ -1,10 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useSocio, getIniciales } from "@/hooks/use-socio"
+import { createClient } from "@/lib/supabase/client"
 import { 
   User, 
   Mail, 
@@ -14,32 +16,104 @@ import {
   Save,
   Camera,
   Shield,
-  CheckCircle
+  CheckCircle,
+  Loader2,
+  AlertCircle
 } from "lucide-react"
 
-const mockUser = {
-  nombre: "Carlos",
-  apellidos: "García López",
-  email: "carlos.garcia@email.com",
-  telefono: "612 345 678",
-  direccion: "Calle Mayor 15, Villar del Olmo",
-  fechaNacimiento: "1985-06-15",
-  dni: "12345678A",
-  numeroSocio: "00247",
-  fechaAlta: "2018-09-01",
-  tipoSocio: "Adulto",
-  avatar: null
-}
-
 export default function PerfilSocioPage() {
+  const { socio, isLoading, error, mutate } = useSocio()
   const [isEditing, setIsEditing] = useState(false)
-  const [formData, setFormData] = useState(mockUser)
+  const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const [formData, setFormData] = useState({
+    nombre: "",
+    apellidos: "",
+    email: "",
+    telefono: "",
+    direccion: "",
+    fecha_nacimiento: "",
+    dni: "",
+  })
 
-  const handleSave = () => {
-    setSaved(true)
-    setIsEditing(false)
-    setTimeout(() => setSaved(false), 3000)
+  // Cargar datos del socio en el formulario
+  useEffect(() => {
+    if (socio) {
+      setFormData({
+        nombre: socio.nombre ?? "",
+        apellidos: socio.apellidos ?? "",
+        email: socio.email ?? "",
+        telefono: socio.telefono ?? "",
+        direccion: socio.direccion ?? "",
+        fecha_nacimiento: socio.fecha_nacimiento ?? "",
+        dni: socio.dni ?? "",
+      })
+    }
+  }, [socio])
+
+  const handleSave = async () => {
+    setSaving(true)
+    setSaveError(null)
+    try {
+      const res = await fetch("/api/socios/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: formData.nombre,
+          apellidos: formData.apellidos,
+          telefono: formData.telefono,
+          direccion: formData.direccion,
+          fecha_nacimiento: formData.fecha_nacimiento,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "Error al guardar")
+
+      await mutate()
+      setSaved(true)
+      setIsEditing(false)
+      setTimeout(() => setSaved(false), 3000)
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Error al guardar")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleResetPassword = async () => {
+    if (!socio?.email) return
+    const supabase = createClient()
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(socio.email, {
+      redirectTo: `${window.location.origin}/socios/login`,
+    })
+    if (resetError) {
+      alert("No se pudo enviar el email de cambio de contraseña.")
+    } else {
+      alert("Te hemos enviado un email para restablecer tu contraseña.")
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-32">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+
+  if (error || !socio) {
+    return (
+      <div className="max-w-md mx-auto mt-16 text-center space-y-4">
+        <div className="h-14 w-14 rounded-full bg-destructive/10 flex items-center justify-center mx-auto">
+          <AlertCircle className="h-7 w-7 text-destructive" />
+        </div>
+        <h2 className="text-xl font-bold">No pudimos cargar tu perfil</h2>
+        <p className="text-muted-foreground">
+          {error?.message || "No se encontró ningún socio asociado a tu cuenta."}
+        </p>
+      </div>
+    )
   }
 
   return (
@@ -72,9 +146,14 @@ export default function PerfilSocioPage() {
               </Button>
               <Button 
                 onClick={handleSave}
+                disabled={saving}
                 className="bg-primary hover:bg-primary/90"
               >
-                <Save className="w-4 h-4 mr-2" />
+                {saving ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Save className="w-4 h-4 mr-2" />
+                )}
                 Guardar cambios
               </Button>
             </>
@@ -94,6 +173,18 @@ export default function PerfilSocioPage() {
         </motion.div>
       )}
 
+      {/* Error message */}
+      {saveError && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-destructive/10 border border-destructive/20 rounded-xl p-4 flex items-center gap-3"
+        >
+          <AlertCircle className="w-5 h-5 text-destructive" />
+          <span className="text-destructive font-medium">{saveError}</span>
+        </motion.div>
+      )}
+
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Avatar y datos básicos */}
         <motion.div
@@ -105,7 +196,7 @@ export default function PerfilSocioPage() {
           <div className="bg-card rounded-2xl border border-border p-6 text-center">
             <div className="relative inline-block">
               <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-4xl font-heading font-bold mx-auto">
-                {formData.nombre[0]}{formData.apellidos[0]}
+                {getIniciales(formData.nombre, formData.apellidos)}
               </div>
               {isEditing && (
                 <button className="absolute bottom-0 right-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white shadow-lg hover:bg-primary/90 transition-colors">
@@ -117,18 +208,20 @@ export default function PerfilSocioPage() {
             <h2 className="text-xl font-heading font-bold mt-4">
               {formData.nombre} {formData.apellidos}
             </h2>
-            <p className="text-muted-foreground">Socio #{formData.numeroSocio}</p>
+            <p className="text-muted-foreground">Socio #{socio.numero_socio}</p>
             
             <div className="mt-6 pt-6 border-t border-border">
               <div className="flex items-center justify-center gap-2 text-primary">
                 <Shield className="w-5 h-5" />
-                <span className="font-semibold">Socio {formData.tipoSocio}</span>
+                <span className="font-semibold">Socio {socio.tipo}</span>
               </div>
               <p className="text-sm text-muted-foreground mt-2">
-                Miembro desde {new Date(formData.fechaAlta).toLocaleDateString("es-ES", { 
-                  month: "long", 
-                  year: "numeric" 
-                })}
+                {socio.fecha_alta
+                  ? `Miembro desde ${new Date(socio.fecha_alta).toLocaleDateString("es-ES", {
+                      month: "long",
+                      year: "numeric",
+                    })}`
+                  : "Miembro del club"}
               </p>
             </div>
           </div>
@@ -182,10 +275,10 @@ export default function PerfilSocioPage() {
                   id="email"
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  disabled={!isEditing}
-                  className="h-12"
+                  disabled
+                  className="h-12 bg-muted/50"
                 />
+                <p className="text-xs text-muted-foreground">El email es tu usuario de acceso y no se puede cambiar aquí</p>
               </div>
               
               <div className="space-y-2">
@@ -224,8 +317,8 @@ export default function PerfilSocioPage() {
                 <Input
                   id="fechaNacimiento"
                   type="date"
-                  value={formData.fechaNacimiento}
-                  onChange={(e) => setFormData({ ...formData, fechaNacimiento: e.target.value })}
+                  value={formData.fecha_nacimiento}
+                  onChange={(e) => setFormData({ ...formData, fecha_nacimiento: e.target.value })}
                   disabled={!isEditing}
                   className="h-12"
                 />
@@ -261,9 +354,9 @@ export default function PerfilSocioPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 bg-muted/30 rounded-xl">
           <div>
             <p className="font-medium">Contraseña</p>
-            <p className="text-sm text-muted-foreground">Última actualización hace 3 meses</p>
+            <p className="text-sm text-muted-foreground">Recibirás un email para restablecerla de forma segura</p>
           </div>
-          <Button variant="outline">
+          <Button variant="outline" onClick={handleResetPassword}>
             Cambiar contraseña
           </Button>
         </div>

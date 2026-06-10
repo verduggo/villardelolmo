@@ -47,66 +47,72 @@ export type Database = {
       socios: {
         Row: {
           id: string
-          numero_socio: string | null
+          usuario_id: string | null
+          numero_socio: string
           nombre: string
           apellidos: string
-          email: string | null
+          email: string
           telefono: string | null
+          dni: string | null
           fecha_nacimiento: string | null
           direccion: string | null
           codigo_postal: string | null
-          ciudad: string | null
-          dni: string | null
-          tipo_socio: 'adulto' | 'juvenil' | 'infantil' | 'familiar' | 'honorario'
-          estado: 'activo' | 'inactivo' | 'pendiente' | 'baja'
+          localidad: string | null
+          tipo: 'Adulto' | 'Juvenil' | 'Infantil' | 'Veterano' | 'Honorario'
+          estado: 'activo' | 'pendiente' | 'inactivo' | 'baja'
           fecha_alta: string
           fecha_baja: string | null
           cuota_anual: number | null
-          ultimo_pago: string | null
+          forma_pago: 'transferencia' | 'domiciliacion' | 'efectivo' | null
+          iban: string | null
           notas: string | null
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
-          numero_socio?: string | null
+          usuario_id?: string | null
+          numero_socio: string
           nombre: string
           apellidos: string
-          email?: string | null
+          email: string
           telefono?: string | null
+          dni?: string | null
           fecha_nacimiento?: string | null
           direccion?: string | null
           codigo_postal?: string | null
-          ciudad?: string | null
-          dni?: string | null
-          tipo_socio?: 'adulto' | 'juvenil' | 'infantil' | 'familiar' | 'honorario'
-          estado?: 'activo' | 'inactivo' | 'pendiente' | 'baja'
+          localidad?: string | null
+          tipo: 'Adulto' | 'Juvenil' | 'Infantil' | 'Veterano' | 'Honorario'
+          estado?: 'activo' | 'pendiente' | 'inactivo' | 'baja'
           fecha_alta?: string
           fecha_baja?: string | null
           cuota_anual?: number | null
-          ultimo_pago?: string | null
+          forma_pago?: 'transferencia' | 'domiciliacion' | 'efectivo' | null
+          iban?: string | null
           notas?: string | null
           created_at?: string
           updated_at?: string
         }
         Update: {
           id?: string
-          numero_socio?: string | null
+          usuario_id?: string | null
+          numero_socio?: string
           nombre?: string
           apellidos?: string
-          email?: string | null
+          email?: string
           telefono?: string | null
+          dni?: string | null
           fecha_nacimiento?: string | null
           direccion?: string | null
           codigo_postal?: string | null
-          ciudad?: string | null
-          dni?: string | null
-          tipo_socio?: 'adulto' | 'juvenil' | 'infantil' | 'familiar' | 'honorario'
-          estado?: 'activo' | 'inactivo' | 'pendiente' | 'baja'
+          localidad?: string | null
+          tipo?: 'Adulto' | 'Juvenil' | 'Infantil' | 'Veterano' | 'Honorario'
+          estado?: 'activo' | 'pendiente' | 'inactivo' | 'baja'
           fecha_alta?: string
           fecha_baja?: string | null
           cuota_anual?: number | null
-          ultimo_pago?: string | null
+          forma_pago?: 'transferencia' | 'domiciliacion' | 'efectivo' | null
+          iban?: string | null
           notas?: string | null
           created_at?: string
           updated_at?: string
