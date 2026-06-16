@@ -73,7 +73,7 @@ export function AboutSection() {
                 </p>
               </div>
               <Link 
-                href="/club"
+                href="/historia"
                 className="group inline-flex items-center gap-4 mt-10"
               >
                 <span className="text-sm font-semibold text-foreground tracking-[0.1em] uppercase group-hover:text-primary transition-colors">

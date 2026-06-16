@@ -20,14 +20,9 @@ const instalaciones = [
     imagen: "/images/instalacion-campo.jpg",
   },
   {
-    nombre: "Focos",
-    descripcion: "Iluminación LED de alta potencia que permite entrenamientos y partidos en horario nocturno con total visibilidad.",
-    imagen: "/images/instalacion-focos.jpg",
-  },
-  {
-    nombre: "Gradas",
-    descripcion: "Gradas con capacidad para cientos de aficionados, cubierta para protegerse de la lluvia y sol en los partidos de local.",
-    imagen: "/images/instalacion-gradas.jpg",
+    nombre: "Dependencias",
+    descripcion: "Bar social del club con terraza junto al campo, un punto de encuentro para socios, familias y aficionados donde disfrutar antes y después de cada partido.",
+    imagen: "/images/instalacion-bar.png",
   },
 ]
 
@@ -87,6 +82,7 @@ export default function InstalacionesPage() {
                           src={inst.imagen}
                           alt={inst.nombre}
                           fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
                           className="object-cover"
                         />
                       </div>

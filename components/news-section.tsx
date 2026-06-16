@@ -17,10 +17,10 @@ const fallbackNews = [
     id: "1",
     categoria_id: null,
     fecha_publicacion: "2026-04-28",
-    titulo: "Victoria contundente en el derbi comarcal",
-    extracto: "El equipo se impuso por 3-0 en un partido que dominó de principio a fin ante la afición local.",
-    slug: "victoria-derbi-comarcal",
-    imagen_principal: "/images/hero-stadium.jpg",
+    titulo: "El club invierte 18.000€ en la reforma de sus instalaciones",
+    extracto: "La directiva ha aprobado una inversión estimada de 18.000 euros para reformar vestuarios, el campo y el bar social, mejorando las instalaciones para socios, jugadores y aficionados.",
+    slug: "obras-reforma-instalaciones",
+    imagen_principal: "/images/news-obras.png",
     contenido: "",
     estado: "publicada" as const,
     destacada: true,
@@ -35,10 +35,10 @@ const fallbackNews = [
     id: "2",
     categoria_id: null,
     fecha_publicacion: "2026-04-25",
-    titulo: "El Alevín A, campeón de su grupo",
-    extracto: "Los más pequeños del club consiguen el título con una temporada impecable.",
-    slug: "alevin-campeon-grupo",
-    imagen_principal: "/images/hero-stadium.jpg",
+    titulo: "Abierto el plazo del Campamento de Verano del club",
+    extracto: "Un verano más, el club organiza su campamento para los más jóvenes con entrenamientos, juegos y actividades. Ya están abiertas las inscripciones para todas las categorías.",
+    slug: "campamento-de-verano",
+    imagen_principal: "/images/news-campamento.png",
     contenido: "",
     estado: "publicada" as const,
     destacada: false,
@@ -53,10 +53,10 @@ const fallbackNews = [
     id: "3",
     categoria_id: null,
     fecha_publicacion: "2026-04-20",
-    titulo: "Jornada de puertas abiertas",
-    extracto: "Este sábado abrimos nuestras puertas a todas las familias que quieran conocer el proyecto.",
-    slug: "jornada-puertas-abiertas",
-    imagen_principal: "/images/hero-stadium.jpg",
+    titulo: "Victoria contundente en el derbi comarcal",
+    extracto: "El equipo se impuso por 3-0 en un partido que dominó de principio a fin ante la afición local.",
+    slug: "victoria-derbi-comarcal",
+    imagen_principal: "/images/news-derbi.png",
     contenido: "",
     estado: "publicada" as const,
     destacada: false,
@@ -71,10 +71,10 @@ const fallbackNews = [
     id: "4",
     categoria_id: null,
     fecha_publicacion: "2026-04-18",
-    titulo: "Nuevas equipaciones para la temporada",
-    extracto: "Diseño que mantiene la esencia verdiblanca con toques modernos para la próxima temporada.",
-    slug: "nuevas-equipaciones-temporada",
-    imagen_principal: "/images/hero-stadium.jpg",
+    titulo: "Jornada de puertas abiertas",
+    extracto: "Este sábado abrimos nuestras puertas a todas las familias que quieran conocer el proyecto.",
+    slug: "jornada-puertas-abiertas",
+    imagen_principal: "/images/news-puertas.png",
     contenido: "",
     estado: "publicada" as const,
     destacada: false,
@@ -164,6 +164,7 @@ export function NewsSection() {
                     src={featured.imagen_principal || "/images/hero-stadium.jpg"}
                     alt={featured.titulo}
                     fill
+                    sizes="(max-width: 1024px) 100vw, 58vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -205,6 +206,7 @@ export function NewsSection() {
                           src={item.imagen_principal || "/images/hero-stadium.jpg"}
                           alt={item.titulo}
                           fill
+                          sizes="112px"
                           className="object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                       </div>

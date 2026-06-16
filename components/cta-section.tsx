@@ -61,10 +61,9 @@ export function CTASection() {
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Button
                       size="lg"
-                      variant="outline"
-                      className="border-white/30 text-white hover:bg-white/10 text-sm font-semibold tracking-[0.1em] px-8 py-6 h-auto w-full sm:w-auto"
+                      className="bg-[oklch(0.22_0.05_145)] text-white hover:bg-[oklch(0.18_0.05_145)] border border-white/20 text-sm font-semibold tracking-[0.1em] px-8 py-6 h-auto w-full sm:w-auto"
                     >
-                      CONTACTAR
+                      CONTÁCTANOS
                     </Button>
                   </motion.div>
                 </Link>

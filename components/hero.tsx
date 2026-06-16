@@ -64,7 +64,7 @@ export function Hero() {
               transition={{ duration: 0.3, delay: 0.25 }}
               className="text-white/70 text-lg md:text-xl max-w-xl mb-12 leading-relaxed font-light"
             >
-              Más de 50 años formando futbolistas y personas. 
+              Décadas formando futbolistas y personas. 
               El club de referencia del fútbol base en la comarca.
             </motion.p>
 
@@ -118,34 +118,6 @@ export function Hero() {
           <ArrowDown className="h-5 w-5" />
         </motion.div>
       </motion.button>
-
-      {/* Stats Bar */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.3, delay: 0.45 }}
-        className="absolute bottom-0 left-0 right-0 bg-white/5 backdrop-blur-xl border-t border-white/10"
-      >
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20">
-          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
-            {[
-              { number: "1970", label: "Año fundación" },
-              { number: "500+", label: "Jugadores formados" },
-              { number: "12", label: "Equipos activos" },
-              { number: "50+", label: "Años de historia" },
-            ].map((stat, i) => (
-              <div key={i} className="py-6 px-4 md:px-8 text-center">
-                <div className="text-2xl md:text-3xl font-bold text-white tracking-tight">
-                  {stat.number}
-                </div>
-                <div className="text-xs text-white/50 tracking-[0.1em] uppercase mt-1">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
     </section>
   )
 }
