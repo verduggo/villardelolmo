@@ -169,7 +169,7 @@ export default function LoginSociosPage() {
               </FadeIn>
               <FadeIn delay={0.3}>
                 <p className="text-white/80 text-lg max-w-sm">
-                  Más de 50 años formando deportistas y creando comunidad
+                  Décadas formando deportistas y creando comunidad
                 </p>
               </FadeIn>
             </div>

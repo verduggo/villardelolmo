@@ -3,50 +3,16 @@
 import { useEffect, useState } from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion"
+import { FadeIn } from "@/components/motion"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, ArrowUpRight, Loader2 } from "lucide-react"
+import { ArrowLeft, ArrowUpRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { createClient } from "@/lib/supabase/client"
 import type { Database } from "@/lib/database.types"
+import { allNews as fallbackNews } from "@/lib/news-data"
 
 type Noticia = Database["public"]["Tables"]["noticias"]["Row"]
-
-const fallbackNews = [
-  {
-    id: "1",
-    titulo: "Victoria contundente en el derbi comarcal",
-    extracto: "El equipo se impuso por 3-0 en un partido que dominó de principio a fin ante la afición local.",
-    slug: "victoria-derbi-comarcal",
-    imagen_principal: "/images/hero-stadium.jpg",
-    fecha_publicacion: "2026-04-28",
-  },
-  {
-    id: "2",
-    titulo: "El Alevín A, campeón de su grupo",
-    extracto: "Los más pequeños del club consiguen el título con una temporada impecable.",
-    slug: "alevin-campeon-grupo",
-    imagen_principal: "/images/hero-stadium.jpg",
-    fecha_publicacion: "2026-04-25",
-  },
-  {
-    id: "3",
-    titulo: "Jornada de puertas abiertas",
-    extracto: "Este sábado abrimos nuestras puertas a todas las familias que quieran conocer el proyecto.",
-    slug: "jornada-puertas-abiertas",
-    imagen_principal: "/images/hero-stadium.jpg",
-    fecha_publicacion: "2026-04-20",
-  },
-  {
-    id: "4",
-    titulo: "Nuevas equipaciones para la temporada",
-    extracto: "Diseño que mantiene la esencia verdiblanca con toques modernos para la próxima temporada.",
-    slug: "nuevas-equipaciones-temporada",
-    imagen_principal: "/images/hero-stadium.jpg",
-    fecha_publicacion: "2026-04-18",
-  },
-]
 
 export default function NoticiasPage() {
   const [noticias, setNoticias] = useState<Partial<Noticia>[]>(fallbackNews)
@@ -128,14 +94,9 @@ export default function NoticiasPage() {
         {/* News list */}
         <section className="py-20 md:py-32">
           <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20">
-            {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            ) : (
-              <StaggerContainer className="space-y-1" staggerDelay={0.1}>
-                {noticias.map((item) => (
-                  <StaggerItem key={item.id}>
+              <div className="space-y-1">
+                {noticias.map((item, index) => (
+                  <FadeIn key={item.id} delay={index * 0.08}>
                     <article className="group">
                       <Link 
                         href={`/noticias/${item.slug}`} 
@@ -147,6 +108,7 @@ export default function NoticiasPage() {
                               src={item.imagen_principal || "/images/hero-stadium.jpg"}
                               alt={item.titulo || ""}
                               fill
+                              sizes="(max-width: 768px) 100vw, 25vw"
                               className="object-cover transition-transform duration-700 group-hover:scale-105"
                             />
                             <motion.div 
@@ -180,10 +142,9 @@ export default function NoticiasPage() {
                         </div>
                       </Link>
                     </article>
-                  </StaggerItem>
+                  </FadeIn>
                 ))}
-              </StaggerContainer>
-            )}
+              </div>
           </div>
         </section>
       </main>

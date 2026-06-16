@@ -8,84 +8,9 @@ import { motion } from "framer-motion"
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion"
 import { createClient } from "@/lib/supabase/client"
 import type { Database } from "@/lib/database.types"
+import { allNews as fallbackNews } from "@/lib/news-data"
 
 type Noticia = Database["public"]["Tables"]["noticias"]["Row"]
-
-// Datos de fallback para cuando no hay conexión a Supabase
-const fallbackNews = [
-  {
-    id: "1",
-    categoria_id: null,
-    fecha_publicacion: "2026-04-28",
-    titulo: "El club invierte 18.000€ en la reforma de sus instalaciones",
-    extracto: "La directiva ha aprobado una inversión estimada de 18.000 euros para reformar vestuarios, el campo y el bar social, mejorando las instalaciones para socios, jugadores y aficionados.",
-    slug: "obras-reforma-instalaciones",
-    imagen_principal: "/images/news-obras.png",
-    contenido: "",
-    estado: "publicada" as const,
-    destacada: true,
-    autor_id: null,
-    meta_titulo: null,
-    meta_descripcion: null,
-    galeria: null,
-    created_at: "",
-    updated_at: "",
-  },
-  {
-    id: "2",
-    categoria_id: null,
-    fecha_publicacion: "2026-04-25",
-    titulo: "Abierto el plazo del Campamento de Verano del club",
-    extracto: "Un verano más, el club organiza su campamento para los más jóvenes con entrenamientos, juegos y actividades. Ya están abiertas las inscripciones para todas las categorías.",
-    slug: "campamento-de-verano",
-    imagen_principal: "/images/news-campamento.png",
-    contenido: "",
-    estado: "publicada" as const,
-    destacada: false,
-    autor_id: null,
-    meta_titulo: null,
-    meta_descripcion: null,
-    galeria: null,
-    created_at: "",
-    updated_at: "",
-  },
-  {
-    id: "3",
-    categoria_id: null,
-    fecha_publicacion: "2026-04-20",
-    titulo: "Victoria contundente en el derbi comarcal",
-    extracto: "El equipo se impuso por 3-0 en un partido que dominó de principio a fin ante la afición local.",
-    slug: "victoria-derbi-comarcal",
-    imagen_principal: "/images/news-derbi.png",
-    contenido: "",
-    estado: "publicada" as const,
-    destacada: false,
-    autor_id: null,
-    meta_titulo: null,
-    meta_descripcion: null,
-    galeria: null,
-    created_at: "",
-    updated_at: "",
-  },
-  {
-    id: "4",
-    categoria_id: null,
-    fecha_publicacion: "2026-04-18",
-    titulo: "Jornada de puertas abiertas",
-    extracto: "Este sábado abrimos nuestras puertas a todas las familias que quieran conocer el proyecto.",
-    slug: "jornada-puertas-abiertas",
-    imagen_principal: "/images/news-puertas.png",
-    contenido: "",
-    estado: "publicada" as const,
-    destacada: false,
-    autor_id: null,
-    meta_titulo: null,
-    meta_descripcion: null,
-    galeria: null,
-    created_at: "",
-    updated_at: "",
-  },
-]
 
 export function NewsSection() {
   const [news, setNews] = useState<Noticia[]>(fallbackNews)

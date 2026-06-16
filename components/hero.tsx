@@ -79,7 +79,7 @@ export function Hero() {
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <Button
                     size="lg"
-                    className="bg-white text-primary hover:bg-white/95 text-sm font-semibold tracking-[0.1em] px-8 py-6 h-auto group"
+                    className="bg-[oklch(0.22_0.05_145)] text-white hover:bg-[oklch(0.18_0.05_145)] text-sm font-semibold tracking-[0.1em] px-8 py-6 h-auto group"
                   >
                     CONOCE EL CLUB
                     <ArrowDown className="ml-3 h-4 w-4 rotate-[-90deg] transition-transform group-hover:translate-x-1" />
@@ -90,8 +90,7 @@ export function Hero() {
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <Button
                     size="lg"
-                    variant="outline"
-                    className="border-white/30 text-white hover:bg-white/10 text-sm font-semibold tracking-[0.1em] px-8 py-6 h-auto"
+                    className="bg-[oklch(0.22_0.05_145)] text-white hover:bg-[oklch(0.18_0.05_145)] border border-white/20 text-sm font-semibold tracking-[0.1em] px-8 py-6 h-auto"
                   >
                     ÚNETE AL CLUB
                   </Button>
