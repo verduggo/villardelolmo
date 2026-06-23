@@ -23,7 +23,7 @@ export function NewsSection() {
         const { data, error } = await supabase
           .from("noticias")
           .select("*")
-          .eq("estado", "publicada")
+          .eq("publicada", true)
           .order("fecha_publicacion", { ascending: false })
           .limit(4)
 

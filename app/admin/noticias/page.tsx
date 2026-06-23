@@ -148,11 +148,11 @@ export default function AdminNoticiasPage() {
                 />
                 <div className="absolute top-3 left-3 flex gap-2">
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    noticia.estado === "publicada" 
+                    noticia.publicada 
                       ? "bg-green-100 text-green-700" 
                       : "bg-zinc-100 text-zinc-700"
                   }`}>
-                    {noticia.estado}
+                    {noticia.publicada ? "publicada" : "borrador"}
                   </span>
                   {noticia.destacada && (
                     <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs font-medium">

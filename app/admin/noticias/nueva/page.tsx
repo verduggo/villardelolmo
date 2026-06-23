@@ -61,11 +61,11 @@ export default function NuevaNoticiaPage() {
           slug: slug,
           extracto: formData.extracto || null,
           contenido: formData.contenido,
-          estado: formData.estado,
+          publicada: formData.estado === "publicada",
           destacada: formData.destacada,
           imagen_principal: formData.imagen_principal || "/images/hero-stadium.jpg",
           fecha_publicacion: formData.estado === "publicada" 
-            ? new Date().toISOString().split("T")[0] 
+            ? new Date().toISOString() 
             : null
         })
 

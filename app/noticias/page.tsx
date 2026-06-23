@@ -25,7 +25,7 @@ export default function NoticiasPage() {
         const { data, error } = await supabase
           .from("noticias")
           .select("*")
-          .eq("estado", "publicada")
+          .eq("publicada", true)
           .order("fecha_publicacion", { ascending: false })
 
         if (error) throw error

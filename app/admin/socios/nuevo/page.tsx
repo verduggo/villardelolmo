@@ -35,8 +35,8 @@ export default function NuevoSocioPage() {
     codigo_postal: "",
     localidad: "",
     fecha_nacimiento: "",
-    tipo_socio: "adulto" as "infantil" | "juvenil" | "adulto" | "veterano",
-    metodo_pago: "domiciliacion"
+    tipo: "Adulto" as "Infantil" | "Juvenil" | "Adulto" | "Veterano",
+    forma_pago: "domiciliacion" as "transferencia" | "domiciliacion" | "efectivo"
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,12 +67,13 @@ export default function NuevoSocioPage() {
           codigo_postal: formData.codigo_postal || null,
           localidad: formData.localidad || null,
           fecha_nacimiento: formData.fecha_nacimiento || null,
-          tipo_socio: formData.tipo_socio,
+          tipo: formData.tipo,
+          forma_pago: formData.forma_pago,
           estado: "activo",
           fecha_alta: new Date().toISOString().split("T")[0],
-          cuota_anual: formData.tipo_socio === "infantil" ? 50 : 
-                       formData.tipo_socio === "juvenil" ? 75 :
-                       formData.tipo_socio === "veterano" ? 80 : 100
+          cuota_anual: formData.tipo === "Infantil" ? 50 : 
+                       formData.tipo === "Juvenil" ? 75 :
+                       formData.tipo === "Veterano" ? 80 : 100
         })
 
       if (insertError) throw insertError
@@ -261,17 +262,17 @@ export default function NuevoSocioPage() {
 
           <div className="grid sm:grid-cols-4 gap-3">
             {[
-              { id: "infantil", label: "Infantil", desc: "Hasta 12 años", cuota: "50€/año" },
-              { id: "juvenil", label: "Juvenil", desc: "13-17 años", cuota: "75€/año" },
-              { id: "adulto", label: "Adulto", desc: "18-64 años", cuota: "100€/año" },
-              { id: "veterano", label: "Veterano", desc: "65+ años", cuota: "80€/año" }
+              { id: "Infantil", label: "Infantil", desc: "Hasta 12 años", cuota: "50€/año" },
+              { id: "Juvenil", label: "Juvenil", desc: "13-17 años", cuota: "75€/año" },
+              { id: "Adulto", label: "Adulto", desc: "18-64 años", cuota: "100€/año" },
+              { id: "Veterano", label: "Veterano", desc: "65+ años", cuota: "80€/año" }
             ].map((tipo) => (
               <button
                 key={tipo.id}
                 type="button"
-                onClick={() => setFormData({ ...formData, tipo_socio: tipo.id as typeof formData.tipo_socio })}
+                onClick={() => setFormData({ ...formData, tipo: tipo.id as typeof formData.tipo })}
                 className={`p-4 rounded-xl border-2 transition-all text-left ${
-                  formData.tipo_socio === tipo.id
+                  formData.tipo === tipo.id
                     ? "border-primary bg-primary/5"
                     : "border-zinc-200 hover:border-zinc-300"
                 }`}
@@ -301,15 +302,15 @@ export default function NuevoSocioPage() {
           <div className="grid sm:grid-cols-3 gap-3">
             {[
               { id: "domiciliacion", label: "Domiciliación bancaria", desc: "Pago mensual automático" },
-              { id: "tarjeta", label: "Tarjeta de crédito", desc: "Pago único anual" },
+              { id: "transferencia", label: "Transferencia", desc: "Pago único anual" },
               { id: "efectivo", label: "Efectivo", desc: "Pago en oficina del club" }
             ].map((metodo) => (
               <button
                 key={metodo.id}
                 type="button"
-                onClick={() => setFormData({ ...formData, metodo_pago: metodo.id })}
+                onClick={() => setFormData({ ...formData, forma_pago: metodo.id as typeof formData.forma_pago })}
                 className={`p-4 rounded-xl border-2 text-left transition-all ${
-                  formData.metodo_pago === metodo.id
+                  formData.forma_pago === metodo.id
                     ? "border-primary bg-primary/5"
                     : "border-zinc-200 hover:border-zinc-300"
                 }`}

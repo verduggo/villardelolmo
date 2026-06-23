@@ -15,7 +15,7 @@ export async function getNoticias(limit?: number) {
       *,
       categoria:categorias_noticia(id, nombre, slug)
     `)
-    .eq('publicado', true)
+    .eq('publicada', true)
     .order('fecha_publicacion', { ascending: false })
   
   if (limit) {
@@ -39,7 +39,7 @@ export async function getNoticiaBySlug(slug: string) {
       categoria:categorias_noticia(id, nombre, slug)
     `)
     .eq('slug', slug)
-    .eq('publicado', true)
+    .eq('publicada', true)
     .single()
   
   if (error) throw error
@@ -74,7 +74,7 @@ export async function getNoticiasByCategoria(categoriaSlug: string) {
       categoria:categorias_noticia!inner(id, nombre, slug)
     `)
     .eq('categorias_noticia.slug', categoriaSlug)
-    .eq('publicado', true)
+    .eq('publicada', true)
     .order('fecha_publicacion', { ascending: false })
   
   if (error) throw error
@@ -91,8 +91,8 @@ export async function getNoticiasDestacadas(limit = 3) {
       *,
       categoria:categorias_noticia(id, nombre, slug)
     `)
-    .eq('publicado', true)
-    .eq('destacado', true)
+    .eq('publicada', true)
+    .eq('destacada', true)
     .order('fecha_publicacion', { ascending: false })
     .limit(limit)
   

@@ -23,8 +23,8 @@ import type { Database } from "@/lib/database.types"
 
 type Socio = Database["public"]["Tables"]["socios"]["Row"]
 
-const tiposFiltro = ["Todos", "adulto", "juvenil", "infantil", "veterano"]
-const estadosFiltro = ["Todos", "activo", "pendiente", "inactivo"]
+const tiposFiltro = ["Todos", "Adulto", "Juvenil", "Infantil", "Veterano", "Honorario"]
+const estadosFiltro = ["Todos", "activo", "pendiente", "inactivo", "baja"]
 
 export default function AdminSociosPage() {
   const [socios, setSocios] = useState<Socio[]>([])
@@ -84,7 +84,7 @@ export default function AdminSociosPage() {
     const matchSearch = nombreCompleto.includes(searchTerm.toLowerCase()) ||
                        (socio.email?.toLowerCase().includes(searchTerm.toLowerCase())) ||
                        (socio.numero_socio?.includes(searchTerm))
-    const matchTipo = tipoFiltro === "Todos" || socio.tipo_socio === tipoFiltro
+    const matchTipo = tipoFiltro === "Todos" || socio.tipo === tipoFiltro
     const matchEstado = estadoFiltro === "Todos" || socio.estado === estadoFiltro
     return matchSearch && matchTipo && matchEstado
   })
@@ -238,7 +238,7 @@ export default function AdminSociosPage() {
                       <p className="text-sm text-zinc-500">{socio.telefono || "---"}</p>
                     </td>
                     <td className="p-4">
-                      <span className="text-sm text-zinc-900 capitalize">{socio.tipo_socio}</span>
+                      <span className="text-sm text-zinc-900 capitalize">{socio.tipo}</span>
                     </td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
